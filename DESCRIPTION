@@ -1,0 +1,27 @@
+Package: RepSeq
+Title: Analysis of High-throughput sequencing repertoire data (RepSeqTools) 
+Version: 0.0.0.9
+Authors@R: person("H. P.", "Pham", email = "hp.pham@iltoopharma.fr", role = c("aut", "cre"))
+Description: This package is for analysing high-thoughput sequencing repertoire data. 
+    It focus on clonotype data sets pre-processd by ClonotypeR, rTCR and MiXCR. 
+    Clonotype tables from different samples are merged, filtered, normalized and 
+    tested for differential expression between groups of samples. 
+    Diversity indices are also studied.
+    Results could be visualized in different ways.
+License: GPL-3
+Depends: data.table
+Imports: 
+    pbapply,
+    parallel,
+    pheatmap,
+    utils,
+    stats,
+    methods,
+    graphics,
+    DESeq2,
+    Rcpp,
+    GMPR
+Encoding: UTF-8
+LazyData: true
+LinkingTo: Rcpp
+RoxygenNote: 6.1.1

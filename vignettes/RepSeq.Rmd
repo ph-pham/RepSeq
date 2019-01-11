@@ -1,0 +1,125 @@
+---
+title: "HTS RepSeq data analysis"
+author: "H. P. Pham"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+## Overview
+RepSeq is a sequencing method for quantifying T-cell repertoire diversity. As for transcriptome study, the first step is to align reads to a reference repertoire. Several softwares were built to align raw sequence (fastq) to a reference repertoire. RepSeq allows to read output file of rTCR (Bowtie2), MiXCR (owner aligner) and ClonotypeR (BWA). This guide provides an overview of the R package `RepSeq` for handling and analyzing aligned sequences data.
+
+## Quick start 
+Load the package into memory
+```{r, echo = TRUE}
+library(RepSeq)
+```
+
+## How to get help for RepSeq
+`?RepSeq`
+
+# Input data
+Input data format is tab-delimited text file as one of the output from MiXCR, RTCR or ClonotypeR. 
+
+Example of output from ClonotypeR, there are 9 columns. The 1st column contains the sample name, 2nd - V$\beta$ identification, 3rd - J$\beta$ identification, 4th - mapq score, 5th - , 6th - alignment score   
+```{r, echo = FALSE}
+demo.file
+```
+
+The function `readClonotypeSet` allows to load all files from a folder and to create an object of class RepSeqExperiment, a S4 class. The tab-delimited files must come from the same aligner. Files could be "gzipped" for saving space on disk. Sample meta data, a `data frame`, could be specified directly or later. The row names of   
+
+```{r readclonotypes, echo = TRUE, eval= FALSE}
+# list files from a folder 
+l <- list.files(file.path(input, "B6"), full.name=TRUE)
+# load sample meta-data (could be added later)
+sample.info <- read.table(file.path(input, "groupCD4MF.csv"), sep=";", header=TRUE, row.names=1)
+# read data files
+datatab <- RepSeq::readClonotypeSet(l, cores = 2L, aligner = "ClonotypeR", chain = "B", sampleinfo = sample.info, keep.ambiguous = FALSE, keep.unproductive = FALSE, aa.th = 8)
+```
+
+Raw aligned data files could be huge and take time to import, RepSeqExperiment object could be save to disk under the `rds` format using the function `base::saveRDS` for futur use.
+```{r saveRDS, echo = TRUE, eval = FALSE}
+saveRDS(datatab, file=file.path(output, "RepSeqExp.rds"))
+```
+
+# The RepSeqExperiment class
+The object class RepSeqExperiment is a S4 class used by `RepSeq` to store counts and all meta data related to samples.    
+```{r datatab, echo = TRUE}
+# load the .rds file if necessary 
+datatab <- readRDS(file=file.path(output, "RepSeqExp.rds"))
+datatab
+```
+
+An object of class RepSeqExperiment contains 4 slots `assay`, `sampleData`, `metaData` and `History`. Slot `assay` is accessible using the method `assay()`. The slot assay is a `data.table` of 9 columns `r paste(colnames(assay(datatab)), collapse=", ")`
+```{r assay, echo = TRUE}
+assay(datatab)
+```
+
+The slot `sampleDate` is a data frame containing sample information. This slot is accessible using the method `sData()` and could be updated using `sData()<-`.
+```{r assay, echo = TRUE}
+sData(datatab)
+```
+
+The slot `metaData` is a `list` that user can add all other information. The method `mData()` is use to retrieve and update the slot `metaData`. 
+```{r assay, echo = TRUE}
+mData(datatab)
+```
+
+The slot `History` is a data frame registering actions taken on the object. 
+```{r assay, echo = TRUE}
+History(datatab)
+```
+
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
