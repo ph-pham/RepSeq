@@ -16,6 +16,7 @@ The latest developement package could be installed from GitHub using **devtools*
 ```r
 install.packages(devtools)  # if necessary
 devtools::install_github("ph-pham/RepSeq")
+library(RepSeq)
 ```
 
 # Data format
