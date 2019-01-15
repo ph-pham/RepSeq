@@ -1,6 +1,6 @@
 # RepSeq
 
-This package is for analysing high-thoughput sequencing repertoire data. It focus on clonotype data sets pre-processd by ClonotypeR, rTCR and MiXCR. Clonotype tables from different samples are merged, filtered, normalized and tested for differential expression between groups of samples. Diversity indices are also studied. Results could be visualized in different ways.
+This package is for analysing high-thoughput sequencing repertoire data. It focus on clonotype data sets pre-processd by ClonotypeR, rTCR and MiXCR. Clonotype tables from each sample are concatenated, filtered, normalized and tested for differential expression between groups of samples. Diversity indices are also studied. Results could be visualized in different ways.
 
 Contact: ph.phuong-a-gmail.com
 
@@ -64,18 +64,18 @@ cdna35	TRAV1-1	TRAJ38	183	212	SN7001332:388:H5YJNBCX2:2:2105:4465:27811	GCTGCCCG
 
 # The RepSeqExperiment object
 
-The RepSeqExperiment object is a R S4 class which store the clonotype tables in long format along with experimantal meta-data. 
+The RepSeqExperiment object is a **R** **S4** class which stores the clonotype tables in long format along with experimantal data. 
 
 ## Anatomy of a RepSeqExperiment
 
-The RepSeqExperiment class contains four slots. 
+The ```RepSeqExperiment``` class contains four slots. 
 * **assayData** a **data.table** that contains clonotype tables in long format with the following columns: 
   * **lib**: sample name
   * **V**: V-gene nomenclature
   * **J**: J-gene nomenclature 
   * **CDR3aa**: peptide chain 
   * **CDR3dna**:  
-  * **VpJ***: clonotype defined as the combination of V-gene, peptide chain & J-gene 
+  * **VpJ**: clonotype defined as the combination of V-gene, peptide chain & J-gene 
   * **VJ**: combination of V & J-genes 
   * **score**: alignment score 
   * **count**: clonotype count (count of VpJ); 
@@ -141,7 +141,7 @@ The format of aligner output file is usually tab-delimited, one tab-delimited fi
 ```r
 # load library in memory
 library(RepSeq)
-# list of aligner output files (suppose to be stored in /MiXCR_output/) 
+# list of aligner output files (suppose to be stored in /MiXCR_output) 
 inputFolder <- list.files("/MiXCR_output/", full.name = TRUE, pattern = ".tsv")
 # Create an object of class RepSeqExperiment using the wrapper function readClonotypeSet
 datatab <- readClonotypeSet(inputFolder, cores=2L, aligner="MiXCR", chain="A", sampleinfo=NULL, keep.ambiguous=FALSE, keep.unproductive=FALSE, aa.th=8) 
