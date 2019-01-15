@@ -140,7 +140,7 @@ library(RepSeq)
 # list of aligner output files (suppose to be stored in /MiXCR_output/) 
 inputFolder <- list.files("/MiXCR_output/", full.name = TRUE, pattern = ".tsv")
 # Create an object of class RepSeqExperiment using the wrapper function readClonotypeSet
-datatab <- readClonotypeSet(file, cores=2L, aligner="MiXCR", chain="A", sampleinfo=NULL, keep.ambiguous=FALSE, keep.unproductive=FALSE, aa.th=8) 
+datatab <- readClonotypeSet(inputFolder, cores=2L, aligner="MiXCR", chain="A", sampleinfo=NULL, keep.ambiguous=FALSE, keep.unproductive=FALSE, aa.th=8) 
 ```
 
 If you have **assayData** data1 and **sampleData** data2:
