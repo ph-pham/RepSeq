@@ -82,6 +82,9 @@ The RepSeqExperiment class contains four slots.
 * **metaData** a **list** containing all other meta data related to experiment, empty by default;
 * **History** a **data.frame** containing history of treatment applied to the RepSeqExperiment object.
 
+## Getter & setter
+...
+
 For more details 
 
 ```r
@@ -90,7 +93,7 @@ For more details
 
 ## Example of data in **assay** and in **sData** slots
 
-assay slot:
+assayData slot:
 ~~~~~~~
 
              lib     V       J             CDR3aa                                                CDR3dna                              VpJ            VJ score count
@@ -108,7 +111,7 @@ assay slot:
 
 ~~~~~~~
 
-sData slot:
+sampleData slot:
 ~~~~~~~
 
                 Sample   Cell  Organ Patient nReads   VpJ  V  J  VJ
