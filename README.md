@@ -92,7 +92,7 @@ For more details
 ?RepSeqExperiment
 ```
 
-## Example of data in **assay** and in **sData** slots
+## Example of data in **assayData** and in **sampleData** slots
 
 assayData slot:
 ~~~~~~~
