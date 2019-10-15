@@ -2,17 +2,22 @@
 % Please edit documentation in R/statFunctions.R
 \name{estimateSF}
 \alias{estimateSF}
-\title{estimate size factor}
+\title{estimate size factor`}
 \usage{
-estimateSF(x, level = c("VpJ", "V", "J", "VJ", "CDR3aa"),
-  method = c("GMPR", "Chao", "Chao.gmmean", "Chao.median"))
+estimateSF(x, level = c("VpJ", "CDR3aa"), method = c("Chao", "iChao",
+  "worChao", "Chao.gmmean", "Chao.median"), UsePseudoRef = TRUE)
 }
 \arguments{
 \item{x}{an object of class RepSeqExperiment}
 
 \item{level}{level of repertoire to analyze \code{VpJ, VJ, V, J, CDR3aa}.}
 
-\item{method}{method used for size factor computation}
+\item{method}{normaliztion method used for size factor computation.}
+
+\item{UsePseudoRef}{a boolean indicating if Chao indices will be computed according to a reference repertoire (geometric mean repertoire across all samples).}
+}
+\value{
+a vector of normalized size factors
 }
 \description{
 function

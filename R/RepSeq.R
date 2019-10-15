@@ -23,7 +23,6 @@
 #' @importFrom stats as.formula
 #' @importFrom Rcpp evalCpp
 #' @importFrom Rcpp sourceCpp
-#' @importFrom GMPR GMPR
 #' @importFrom stats median
 #' @useDynLib RepSeq
 #' @name RepSeq
