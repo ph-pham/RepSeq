@@ -9,11 +9,13 @@ getOverlaps(x, level = c("VpJ", "CDR3dna"), libnames = NULL)
 \arguments{
 \item{x}{an object of class [\code{\linkS4class{RepSeqExperiment}}]}
 
-\item{level}{level for shared}
+\item{level}{level of shared clonotypes, VpJ or CDR3dna}
+
+\item{libnames}{a vector of specific sample names to get shared clonotypes, default value is NULL, shared clonotypes will be computed for all samples.}
 }
 \value{
 an object of class [\code{\linkS4class{RepSeqExperiment}}]
 }
 \description{
-function returns an RepSeqExperiment object containing shared clonotyes which expressed only in at least two samples
+function returns an RepSeqExperiment object containing shared clonotyes which expressed in at least two samples
 }

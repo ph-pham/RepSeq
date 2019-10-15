@@ -19,8 +19,9 @@ Imports:
     methods,
     graphics,
     DESeq2,
-    Rcpp,
-    GMPR
+    Rcpp
+Suggests: BiocStyle, knitr, rmarkdown
+VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
 LinkingTo: Rcpp

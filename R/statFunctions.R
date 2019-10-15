@@ -17,23 +17,33 @@ toDESeq2 <- function(x, conditions, level=c("VpJ", "V", "J", "VJ", "CDR3aa")) {
     if (!is.RepSeqExperiment(x)) stop("a RepSeqCount object is expected.")
     if (missing(conditions)) stop("user musts provide at least 1 condition.")    
     # get sample info
-    coldat <- sData(x)[, conditions, drop=FALSE]    
+    coldat <- sData(x)[, conditions, drop=FALSE]
+    coldat <- apply(coldat, 2, function(x) gsub("\ ", ".", x)) # replace blank characters by "dot"
+    coldat <- apply(coldat, 2, function(x) gsub("\\+", "p", x)) # replace + by "p"
+    coldat <- apply(coldat, 2, function(x) gsub("\\-", "m", x)) # replace - by "m"
     levelChoice <- match.arg(level)
     cts <- countFeatures(x, level=levelChoice)
-    if (length(conditions) > 1) conditions <- paste(conditions, collapse="+") 
-    dds <- DESeq2::DESeqDataSetFromMatrix(countData = data.frame(cts, row.names=1), colData = coldat, design = as.formula(paste0("~" ,conditions)))
+    if (length(conditions) > 1) conditions <- paste(conditions, collapse="+")
+    rownames(coldat) <- gsub("-", ".", rownames(coldat))
+    cts <- data.frame(cts, row.names=1)
+    colnames(cts) <- gsub("-", ".", colnames(cts))
+    dds <- DESeq2::DESeqDataSetFromMatrix(countData = cts, colData = coldat, design = as.formula(paste0("~" ,conditions)))
     return(dds)
 }
 
 
-#' estimate size factor
+#' estimate size factor`
 #'
 #' function 
 #'
 #' @param x an object of class RepSeqExperiment
 #' @param level level of repertoire to analyze \code{VpJ, VJ, V, J, CDR3aa}.
-#' @param method method used for size factor computation
-estimateSF <- function(x, level=c("VpJ", "V", "J", "VJ", "CDR3aa"), method=c("GMPR", "Chao", "Chao.gmmean", "Chao.median")) {
+#' @param method normaliztion method used for size factor computation.
+#' @param UsePseudoRef a boolean indicating if Chao indices will be computed according to a reference repertoire (geometric mean repertoire across all samples). 
+#' @return a vector of normalized size factors
+#' @export
+# @example
+estimateSF <- function(x, level=c("VpJ", "CDR3aa"), method=c("Chao", "iChao", "worChao", "Chao.gmmean", "Chao.median"), UsePseudoRef=TRUE) {
     # test 
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("a RepSeqCount object is expected.")
@@ -45,30 +55,50 @@ estimateSF <- function(x, level=c("VpJ", "V", "J", "VJ", "CDR3aa"), method=c("GM
     }
     levelChoice <- match.arg(level)
     meth <- match.arg(method)
-    chao1 <- sj <- s0 <- NULL
-    if (meth == "GMPR") {
-        cts <- countFeatures(x, level=levelChoice)
-        out <- GMPR::GMPR(t(data.frame(cts, row.names=1)))
-        }
+    dat <- copy(assay(x))
+    chao1 <- ichao <- chaowor <- sj <- s0 <- NULL
+#    if (meth == "GMPR") {
+#        cts <- countFeatures(x, level=levelChoice)
+#        out <- GMPR::GMPR(t(data.frame(cts, row.names=1)))
+#        }
     if (meth == "Chao") {
-        dat <- assay(x)
         chao <- dat[, .(count=sum(count)), by=c("lib", levelChoice)][, .(s0=sum(count>0), sj=sum(count), chao1=chaoest(count)), by="lib"]
-        out <- chao[, chao1*sj/s0]
+        if (UsePseudoRef) {
+            ref <- dat[, .(gmmean=gm_mean(count)), by=levelChoice]
+            chao.ref <- chaoest(ref$gmmean)
+            out <- chao[, (chao.ref/s0) * sj]
+            } else out <- chao[, (chao1/s0) * sj]
         names(out) <- chao$lib
         }
     if (meth == "Chao.gmmean") {
-        dat <- assay(x)
         chao <- dat[, .(count=sum(count)), by=c("lib", levelChoice)][, .(chao1=chaoest(count)), by="lib"]
-        tmp <- dat[, .(s0=sum(count>0), sj=sum(count)), by="lib"][, gm_mean(chao$chao1)*sj/s0, by="lib"]
-        out <- tmp$V1
+        out <- dat[, .(s0=sum(count>0), sj=sum(count)), by="lib"][, (gm_mean(chao$chao1)/s0)*sj]
         names(out) <- tmp$lib
         }
     if (meth == "Chao.median") {
-        dat <- assay(x)
         chao <- dat[, .(count=sum(count)), by=c("lib", levelChoice)][, .(chao1=chaoest(count)), by="lib"]
         tmp <- dat[, .(s0=sum(count>0), sj=sum(count)), by="lib"][, stats::median(chao$chao1[chao$chao1>0], na.rm=TRUE)*sj/s0, by="lib"]
         out <- tmp$V1
         names(out) <- tmp$lib
+        }
+    if (method == "iChao") {
+        chao <- dat[, .(count=sum(count)), by=c("lib", levelChoice)][, .(s0=sum(count>0), sj=sum(count), ichao=iChao(count)), by="lib"]
+        if (UsePseudoRef) {
+            ref <- dat[, .(gmmean=gm_mean(count)), by=levelChoice]
+            chao.ref <- iChao(ref$gmmean)
+            out <- chao[, (chao.ref/s0) * sj]
+            } else out <- chao[, (ichao/s0) * sj]
+        names(out) <- chao$lib
+        }
+    if (method == "worChao") {
+
+        chao <- dat[, .(count=sum(count)), by=c("lib", levelChoice)][, .(s0=sum(count>0), sj=sum(count), chaowor=Chaowor(count)), by="lib"]
+        if (UsePseudoRef) {
+            ref <- dat[, .(gmmean=gm_mean(count)), by=levelChoice]
+            chao.ref <- Chaowor(ref$gmmean)
+            out <- chao[, (chao.ref/s0) * sj]
+            } else out <- chao[, (chaowor/s0) * sj]
+        names(out) <- chao$lib
         }
     return(out)
 }
@@ -195,22 +225,31 @@ named.contr.sum <- function(x, ...) {
     x
 }
 
-# between samples normalization 
-#
-# function normalize  
-#
-# @param x a RepSeqExperiment 
-# @param 
-# @param method method used for normalization 
-# @return a normalized count matrix (samples in columns and clonotypes in rows)
+#' Get normalized count 
+#'
+#' function computes the estimated size factor according to the choice and level of the repertoire, and the  
+#'
+#' @param x a RepSeqExperiment. 
+#' @param method method used for normalization. 
+#' @param UsePseudoRef a boolen indicatif whether a reference repertoire will be used for normalizaition. 
+#' @return an object of class RepSeqExperiment with normalized counts.
+#' @export
 # @example
-# @export
-
-#normalizeCounts <- function(x) {
+# Discussion https://support.bioconductor.org/p/66067/
+normalizeCounts <- function(x, method=c("Chao", "iChao", "worChao", "Chao.gmmean", "Chao.median"), UsePseudoRef=TRUE) {
     # test 
-#    if (missing(x)) stop("x is missing.")
-#    if (!is.RepSeqExperiment(x)) stop("a RepSeqCount object is expected.")
+    if (missing(x)) stop("x is missing.")
+    if (!is.RepSeqExperiment(x)) stop("a RepSeqCount object is expected.")
+    choice <- match.arg(method)
+    dat <- copy(assay(x))
+    sampleinfo <- sData(x) 
+    sf <- estimateSF(x, level="VpJ", method=choice, UsePseudoRef=UsePseudoRef)
+    dat[, count:=count/rep(sf, table(dat$lib))]
+    sampleinfo$sf <- sf
+    x.hist <- data.frame(rbind(History(x), history = paste0("normalizedCounts; x=", deparse(substitute(x)), "; method=", choice, "; UsePseudoRef=", UsePseudoRef)), stringsAsFactors = FALSE)
+    out <- methods::new("RepSeqExperiment", assayData=dat, sampleData=sampleinfo, metaData=mData(x), History=x.hist) 
+}
 
-#}
+
 
 

@@ -13,9 +13,9 @@ readClonotypeSet(fileList, cores = 1L, aligner = c("ClonotypeR",
 
 \item{cores}{an interger number of cores to use. Default is 1.}
 
-\item{aligner}{software used to align reads ("rTCR", "ClonotypeR" or "MiXCR"). Only ClonotypeR is supported for the moment.}
+\item{aligner}{software used to align reads ("rTCR", "ClonotypeR" or "MiXCR").}
 
-\item{chain}{an character indicates which TCR chain alpha or betha to import, Use \code{A} for alpha chain and \code{B} for beta chain. Default is \code{A}.}
+\item{chain}{an character indicates which TCR chain alpha or beta to import, Use \code{A} for alpha chain and \code{B} for beta chain. Default is \code{A}.}
 
 \item{sampleinfo}{a data frame containing sample information for each clonotype file in fileList. The number of rows of sampleinfo must be identical to the number of file in fileList. A data frame containing If NULL}
 

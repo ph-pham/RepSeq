@@ -235,8 +235,8 @@ readClonotypes <- function(x, aligner=c("ClonotypeR", "rTCR", "MiXCR"), chain=c(
 #'
 #' @param fileList a list of file paths to import. 
 #' @param cores an interger number of cores to use. Default is 1.
-#' @param chain an character indicates which TCR chain alpha or betha to import, Use \code{A} for alpha chain and \code{B} for beta chain. Default is \code{A}.
-#' @param aligner software used to align reads ("rTCR", "ClonotypeR" or "MiXCR"). Only ClonotypeR is supported for the moment.
+#' @param chain an character indicates which TCR chain alpha or beta to import, Use \code{A} for alpha chain and \code{B} for beta chain. Default is \code{A}.
+#' @param aligner software used to align reads ("rTCR", "ClonotypeR" or "MiXCR"). 
 #' @param sampleinfo a data frame containing sample information for each clonotype file in fileList. The number of rows of sampleinfo must be identical to the number of file in fileList. A data frame containing If NULL 
 #' @param keep.ambiguous a boolean choice if ambiguous clonotypes (contain STOP codon) should be kept in analysis. Default is \code{FALSE}. 
 #' @param keep.unproductive a boolean choice if unproductive clonotypes (Euclidean dividion of aa length by 3 > 0) should be kept in analysis. Default is \code{FALSE}.
@@ -285,7 +285,7 @@ readClonotypeSet <- function(fileList, cores=1L, aligner=c("ClonotypeR", "rTCR",
 	 # Define the 'history'      
 	 x.hist <- data.frame(history=c(paste0("data directory=", dirname(fileList[1])), 
 	           paste0("readClonotypeSet; cores=", cores, "; aligner=", parser, "; chain=", ch, "; ambiguous ", 
-	               keep.ambiguous, "; unprod ", keep.unproductive, "; aa threshold=", aa.th)))
+	               keep.ambiguous, "; unprod ", keep.unproductive, "; aa threshold=", aa.th)), stringsAsFactors=FALSE)
 	 out <- methods::new("RepSeqExperiment", assayData=countobj, sampleData=sampleinfo, metaData=list(), History=x.hist)
      cat("Done.\n")
      return(out)
@@ -315,6 +315,30 @@ readClonotypeSet <- function(fileList, cores=1L, aligner=c("ClonotypeR", "rTCR",
 #   features <- features[, VJ := paste(V, J)]
 #   return(features)
 #}
+
+
+#' build RepSeqExperiment object from clonotype tables
+#'
+#' function creates RepSeqExperiment object from clonotype tables. 
+#' @param clonotypetab a data.table of clonotype tables. The column names should be: lib, V, J, CDR3aa, CDR3dna, VpJ, VJ, score, count.
+#' @param sampleinfo a data frame containing sample meta data
+#' @return an object of class RepSeqExperiment
+#' @export
+# @example
+RepSeqExp <- function(clonotypetab, sampleinfo=NULL) {
+    coltab <- c("lib", "V", "J", "CDR3aa", "CDR3dna", "VpJ", "VJ", "score", "count")
+    if (missing(clonotypetab)) stop("a clonotype table is expected.")
+    if (!is.data.table(clonotypetab)) setDT(clonotypetab)
+    if (all(grepl(paste(coltab, collapse="|"), colnames(clonotypetab)))) 
+        stop("Column names of clonotype table must contain lib, V, J, CDR3aa, CDR3dna, VpJ, VJ, score, count")
+    stats <- clonotypetab[, c(.(nReads=sum(count)), lapply(.SD, uniqueN)), by="lib", .SDcols=c("VpJ", "V", "J", "VJ", "CDR3aa")]
+    sNames <- unique(clonotypetab$lib)
+    if (is.null(sampleinfo)) 
+        sampleinfo <- data.frame(cbind(sample=sNames, stats), row.names=sNames)
+    x.hist <- data.frame(history = paste0("RepSeqExp; clononotypetab=", deparse(substitute(clonotypetab)), "; sampleinfo=", deparse(substitute(sampleinfo))), stringsAsFactors=FALSE)
+    out <- methods::new("RepSeqExperiment", assayData=clonotypetab, sampleData=sampleinfo, metaData=list(), History=x.hist) 
+    return(out)
+}
 
 #' count reads
 #'
@@ -448,10 +472,11 @@ getPrivates <- function(x) {
 
 #' get shared clonotypes
 #' 
-#' function returns an RepSeqExperiment object containing shared clonotyes which expressed only in at least two samples
+#' function returns an RepSeqExperiment object containing shared clonotyes which expressed in at least two samples
 #'
 #' @param x an object of class [\code{\linkS4class{RepSeqExperiment}}]
-#' @param level level for shared 
+#' @param level level of shared clonotypes, VpJ or CDR3dna  
+#' @param libnames a vector of specific sample names to get shared clonotypes, default value is NULL, shared clonotypes will be computed for all samples.
 #' @return an object of class [\code{\linkS4class{RepSeqExperiment}}]
 #' @export
 # @example

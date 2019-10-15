@@ -15,7 +15,7 @@ basicIndices <- function(x, level=c("VpJ", "V", "J", "VJ", "CDR3aa")) {
     # summary function
     pastek <- function(y) list(shannon=.diversity(y, index="shannon"), simpson=.diversity(y, index="simpson"), 
                             invsimpson=.diversity(y, index="invsimpson"), gini=.gini(y), 
-                            chao1=.chao1(y)$chao.est, chao1.se=.chao1(y)$chao.se)   
+                            chao1=.chao1(y)$chao.est, chao1.se=.chao1(y)$chao.se, ichao=iChao(y), chaowor=Chaowor(y))   
     out <- assay(x)[, .(count=sum(count)), by=c("lib", levelChoice)][, pastek(count), by="lib"]
     return(out)
 }
@@ -142,3 +142,44 @@ renyiProfiles <- function(x, scales=c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, Inf)
 #    
 #
 #}
+
+#' Improved Chao1
+#'
+#' function computes the improve version of Chao1
+#' @param x a vector of count.
+#' @return improved Chao1 value (ref) Chao and Lin Chao, A. and Lin, C.-W. (2012) Nonparametric lower bounds for species richness and shared species richness under sampling without replacement. Biometrics,68, 912–921. 
+#' @export
+# @example
+iChao <- function(x) {
+    f1 <- sum(x == 1)
+    f2 <- sum(x == 2)
+    f3 <- sum(x == 3)
+    f4 <- sum(x == 4)
+    if (f4 == 0) f4 <- 1
+    n <- sum(x)
+    p1 <- (n-3)/n
+    p2 <- (n-3)/(n-1)
+    est <- .chao1(x)$chao.est + p1*f3/(4*f4) * max(f1 - p2*f2*f3/(2*f4), 0)
+    return(est)
+}
+
+#' Adjusted Chao1 for sampling without replacement 
+#'
+#' function compute the correct 
+#' @param x a vector of counts
+#' @return a value of Chao1
+#' @export
+# @example
+Chaowor <- function(x) {
+    f1 <- sum(x == 1)
+    f2 <- sum(x == 2)
+    S <- sum(x > 0)
+    n <- sum(x)
+    q <- n/S
+    dn1 <- n*2*f2/(n-1)
+    dn2 <- q*f1/(q-1)
+    est <- S + (f1^2)/(dn1 + dn2)
+    return(est)
+}
+
+
