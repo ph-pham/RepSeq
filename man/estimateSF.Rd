@@ -4,8 +4,12 @@
 \alias{estimateSF}
 \title{estimate size factor`}
 \usage{
-estimateSF(x, level = c("VpJ", "CDR3aa"), method = c("Chao", "iChao",
-  "worChao", "Chao.gmmean", "Chao.median"), UsePseudoRef = TRUE)
+estimateSF(
+  x,
+  level = c("VpJ", "CDR3aa"),
+  method = c("Chao", "iChao", "worChao", "Chao.gmmean", "Chao.median"),
+  UsePseudoRef = TRUE
+)
 }
 \arguments{
 \item{x}{an object of class RepSeqExperiment}

@@ -251,7 +251,11 @@ readClonotypeSet <- function(fileList, cores=1L, aligner=c("ClonotypeR", "rTCR",
     # get number of cores
     cores <- min(parallel::detectCores()-1, cores)    
     cat("Running on", cores, "cores.\n")
-    if (length(fileList) == 0) stop("Empty list of files, please check folder path.\n")    
+    if (length(fileList) == 0) stop("Empty list of files, please check folder path.\n") 
+    if (is.null(sampleinfo)) {
+	   sampleinfo <- data.frame(ID=basename(fileList), row.names=gsub(".tsv|.txt|.gz|.zip|.tar", "", basename(fileList)))
+	   }
+	if (nrow(sampleinfo) != length(fileList)) stop("Number of files to import differ number of samples in sampleinfo file.")
     # selected parser
     parser <- match.arg(aligner)
     # choice of chain to keep
@@ -274,15 +278,11 @@ readClonotypeSet <- function(fileList, cores=1L, aligner=c("ClonotypeR", "rTCR",
      countobj <- data.table::rbindlist(repList)
      # get stats about clonotypes
      stats <- countobj[, c(.(nReads=sum(count)), lapply(.SD, uniqueN)), by="lib", .SDcols=c("VpJ", "V", "J", "VJ", "CDR3aa")]
+     sampleinfo <- data.frame(sampleinfo, data.frame(stats, row.names=1))
      # make keys
      #data.table::setkey(countobj, lib, VpJ, V, J, VJ)
      cat("Creating a RepSeqExperiment object...\n") 
-	 if (is.null(sampleinfo)) {
-	   sampleinfo <- data.frame(ID=basename(fileList), row.names=gsub(".tsv|.txt|.gz|.zip|.tar", "", basename(fileList)))
-	   } else {
-	       sampleinfo <- data.frame(sampleinfo, data.frame(stats, row.names=1))
-	       }
-	 # Define the 'history'      
+	 	 # Define the 'history'      
 	 x.hist <- data.frame(history=c(paste0("data directory=", dirname(fileList[1])), 
 	           paste0("readClonotypeSet; cores=", cores, "; aligner=", parser, "; chain=", ch, "; ambiguous ", 
 	               keep.ambiguous, "; unprod ", keep.unproductive, "; aa threshold=", aa.th)), stringsAsFactors=FALSE)
@@ -327,10 +327,11 @@ readClonotypeSet <- function(fileList, cores=1L, aligner=c("ClonotypeR", "rTCR",
 # @example
 RepSeqExp <- function(clonotypetab, sampleinfo=NULL) {
     coltab <- c("lib", "V", "J", "CDR3aa", "CDR3dna", "VpJ", "VJ", "score", "count")
-    if (missing(clonotypetab)) stop("a clonotype table is expected.")
+    if (missing(clonotypetab)) stop("clonotyetable is missing, a clonotype table is expected.")
     if (!is.data.table(clonotypetab)) setDT(clonotypetab)
-    if (all(grepl(paste(coltab, collapse="|"), colnames(clonotypetab)))) 
+    if (!all(grepl(paste(coltab, collapse="|"), colnames(clonotypetab)))) {
         stop("Column names of clonotype table must contain lib, V, J, CDR3aa, CDR3dna, VpJ, VJ, score, count")
+        }
     stats <- clonotypetab[, c(.(nReads=sum(count)), lapply(.SD, uniqueN)), by="lib", .SDcols=c("VpJ", "V", "J", "VJ", "CDR3aa")]
     sNames <- unique(clonotypetab$lib)
     if (is.null(sampleinfo)) 
@@ -559,3 +560,68 @@ filetype <- function(path) {
     close.connection(f)
     return(ext)
 }
+
+#' concatenate 2 RepSeqExperiment objects
+#'
+#' function concateRepSeq allow to concatenate 2 RepSeqExperiement objects. Overlaps in sample names are not allowed. 
+#' @param a first RepSeqExperiment object.
+#' @param b second RepSeqExperiment object.
+#' @return a RepSeqExperiment object.
+#' @export
+# @example
+concateRepSeq <- function(a, b) {
+    if (missing(a) | missing (b)) stop("Two RepSeqExperiment objects are required.")
+    if (!is.RepSeqExperiment(a)) stop("a is not an object of class RepSeqExperiment.")
+    if (!is.RepSeqExperiment(b)) stop("b is not an object of class RepSeqExperiment.")
+    if (any(rownames(RepSeq::sData(a)) == rownames(RepSeq::sData(b)))) stop(paste("Sample in", a, "existing in ", b, "."))
+    cts <- rbind(RepSeq::assay(a), RepSeq::assay(b))
+    cts[, lib:=as.character(lib)]
+    sampleinfo <- rbind(RepSeq::sData(a), RepSeq::sData(b))
+    a.history <- paste0(deparse(substitute(a)), ":", RepSeq::History(a)$history)
+    b.history <- paste0(deparse(substitute(b)), ":", RepSeq::History(b)$history)
+    concat.history <- paste(date(),"- concatenation of", deparse(substitute(a)), "and", deparse(substitute(b)), "using the function concateRepSeq")
+    all.history <- data.frame(history=c(a.history, b.history, concat.history))
+    metainfo <- ifelse(length(RepSeq::mData(a)) > 0 | length(RepSeq::mData(b)) > 0, c(RepSeq::mData(a), RepSeq::mData(b)), list())
+    out <- new("RepSeqExperiment", 
+            assayData=cts, 
+            sampleData=sampleinfo, 
+            metaData=metainfo, 
+            History=all.history)
+    return(out)
+}
+
+#' drop sample(s) from a RepSeqExperiment object
+#'
+#' function allows to remove one or several samples from an RepSeqExperiment object. 
+#' @param x a RepSeqExperiment object.
+#' @param samples a vector containing sample names to be removed or a vector of their positions in sampleData slot.
+#' @return a RepSeqExperiment object.
+#' @export
+# @example
+dropSamples <- function(x, samples) {
+    if (missing(x)) stop("A RepSeqExperiment object is required.")
+    if (!is.RepSeqExperiment(x)) stop("x is not an object of class RepSeqExperiment.")
+    sampleinfo <- sData(x)
+    if (is.numeric(samples)) {
+        index <- samples
+        snames <- rownames(sampleinfo)[index]
+    }
+    if (is.character(samples)) {
+        if (!all(samples %in% rownames(sampleinfo))) stop("Sample names not found in x.")
+        index <- which(rownames(sampleinfo) %in% samples)
+        snames <- samples
+    }
+    cts <- copy(assay(x))
+    cts <- cts[!(lib %in% snames)]
+    cts[, lib:=as.character(lib)]
+    sampleinfo <- droplevels(sampleinfo[-c(index), , drop=FALSE])
+    x.history <- data.frame(rbind(History(x), data.frame(history=paste(date(), "- drop", paste0(snames, collapse=", "), "from", deparse(substitute(x)), "using the function dropSamples"))))
+    metainfo <- mData(x)
+    out <- new("RepSeqExperiment", 
+            assayData=cts, 
+            sampleData=sampleinfo, 
+            metaData=metainfo, 
+            History=x.history)
+    return(out)
+}
+

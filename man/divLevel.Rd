@@ -4,8 +4,13 @@
 \alias{divLevel}
 \title{compute diversity indices}
 \usage{
-divLevel(x, index = c("shannon", "simpson", "invsimpson"),
-  level = c("VJ", "V", "J"), norm = TRUE, base = exp(1))
+divLevel(
+  x,
+  index = c("shannon", "simpson", "invsimpson"),
+  level = c("VJ", "V", "J"),
+  norm = TRUE,
+  base = exp(1)
+)
 }
 \arguments{
 \item{x}{a object of class RepSeqExperiment.}

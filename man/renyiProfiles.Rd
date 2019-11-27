@@ -4,8 +4,11 @@
 \alias{renyiProfiles}
 \title{compute Renyi's profile}
 \usage{
-renyiProfiles(x, scales = c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, Inf),
-  level = c("VpJ", "V", "J", "VJ", "CDR3aa"))
+renyiProfiles(
+  x,
+  scales = c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, Inf),
+  level = c("VpJ", "V", "J", "VJ", "CDR3aa")
+)
 }
 \arguments{
 \item{x}{an object of class RepSeqExperiment}
