@@ -24,7 +24,6 @@
 \alias{names,RepSeqExperiment-method}
 \alias{names}
 \alias{names<-,RepSeqExperiment-method}
-\alias{[,RepSeqExperiment,ANY,ANY,ANY-method}
 \alias{[,RepSeqExperiment-method}
 \alias{is.RepSeqExperiment}
 \title{Class RepSeqExperiment}
@@ -67,7 +66,7 @@ History(object) <- value
 
 \S4method{names}{RepSeqExperiment}(x) <- value
 
-\S4method{[}{RepSeqExperiment,ANY,ANY,ANY}(x, i, j, drop)
+\S4method{[}{RepSeqExperiment}(x, i, j, drop)
 
 is.RepSeqExperiment(x)
 }

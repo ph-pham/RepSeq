@@ -18,12 +18,20 @@
 #' @import pbapply
 #' @import parallel
 #' @import methods
-#' @importFrom DESeq2 DESeqDataSetFromMatrix
-#' @importFrom pheatmap pheatmap
-#' @importFrom stats as.formula
+# @importFrom DESeq2 DESeqDataSetFromMatrix
+# @importFrom pheatmap pheatmap
+# @importFrom stats as.formula
 #' @importFrom Rcpp evalCpp
 #' @importFrom Rcpp sourceCpp
-#' @importFrom stats median
+#' @importFrom stats median sd as.formula
+#' @importFrom grDevices colorRampPalette
+# @importFrom stats sd
+# @importFrom ade4 s.class
+# @importFrom naturalsort naturalsort
+# @importFrom scales percent
+# @importFrom limma vennDiagram
+# @importFrom limma vennCounts
+# @importFrom vegan vegdist
 #' @useDynLib RepSeq
 #' @name RepSeq
 NULL

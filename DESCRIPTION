@@ -1,28 +1,25 @@
 Package: RepSeq
-Title: Analysis of High-throughput sequencing repertoire data (RepSeqTools) 
+Title: Analysis of High-throughput sequencing repertoire data
+        (RepSeqTools)
 Version: 0.0.0.9
 Authors@R: person("H. P.", "Pham", email = "hp.pham@iltoopharma.fr", role = c("aut", "cre"))
 Description: This package is for analysing high-thoughput sequencing repertoire data. 
-    It focus on clonotype data sets pre-processd by ClonotypeR, rTCR and MiXCR. 
-    Clonotype tables from different samples are merged, filtered, normalized and 
+    It focuses on clonotype data sets pre-processd by ClonotypeR, rTCR and MiXCR. 
+    Clonotype tables from different samples are merged, filtered, normalised and 
     tested for differential expression between groups of samples. 
     Diversity indices are also studied.
     Results could be visualized in different ways.
-License: GPL-3
+License: GPL-3 + file LICENSE
 Depends: data.table
-Imports: 
-    pbapply,
-    parallel,
-    pheatmap,
-    utils,
-    stats,
-    methods,
-    graphics,
-    DESeq2,
-    Rcpp
-Suggests: BiocStyle, knitr, rmarkdown
+Imports: pbapply, parallel, utils, stats, methods, graphics, Rcpp
+Suggests: BiocStyle, knitr, rmarkdown, ggplot2, pheatmap, DESeq2, ade4,
+        limma, naturalsort, scales, vegan
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
 LinkingTo: Rcpp
-RoxygenNote: 7.0.1
+RoxygenNote: 7.1.0
+NeedsCompilation: yes
+Packaged: 2020-05-27 20:33:50 UTC; phuong
+Author: H. P. Pham [aut, cre]
+Maintainer: H. P. Pham <hp.pham@iltoopharma.fr>

@@ -2,17 +2,19 @@
 % Please edit documentation in R/plotFunctions.R
 \name{plotCountVJ}
 \alias{plotCountVJ}
-\title{plot a heatmap og V-J count}
+\title{plot a heatmap of V-J count}
 \usage{
-plotCountVJ(x, sampleName = NULL)
+plotCountVJ(x, sampleName = NULL, scale = c("counts", "percent", "cpm"))
 }
 \arguments{
-\item{x}{a matrix of count data}
+\item{x}{an object of class RepSeqExperiment}
 
 \item{sampleName}{sample to plot, sample name must be existed among x column names.}
+
+\item{scale}{type of data to plot: raw count, percentages or count per million.}
 }
 \value{
-a heatmap of count
+a heatmap
 }
 \description{
 function plots a heatmap of V-J counts for sampleName

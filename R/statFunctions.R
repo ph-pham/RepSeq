@@ -27,6 +27,7 @@ toDESeq2 <- function(x, conditions, level=c("VpJ", "V", "J", "VJ", "CDR3aa")) {
     rownames(coldat) <- gsub("-", ".", rownames(coldat))
     cts <- data.frame(cts, row.names=1)
     colnames(cts) <- gsub("-", ".", colnames(cts))
+    cts <- cts[, match(rownames(coldat),colnames(cts))]
     dds <- DESeq2::DESeqDataSetFromMatrix(countData = cts, colData = coldat, design = as.formula(paste0("~" ,conditions)))
     return(dds)
 }

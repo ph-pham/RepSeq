@@ -11,15 +11,6 @@ RepSeq is an open source R package which aims to facilitate Immune Repertoire da
 
 # Package installation
 
-**RepSeq** depends on the following packages: *data.table, pbapply, pheatmap, 
-DESeq2, Rcpp, vegan, ggplot2, naturalsort, scales, magick*. 
-These above packages could be installed using the following scripts:
-```r
-list.pkgs <- c("data.table", "pbapply", "pheatmap", "DESeq2", "Rcpp", "vegan", "ggplot2", "naturalsort", "scales", "magick")
-pkgs <- list.pkgs[!(list.pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)>0) install.packages(pkgs)
-```
-
 The latest developement package could be installed from GitHub using **devtools**.
 
 ```r

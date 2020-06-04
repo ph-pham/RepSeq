@@ -327,22 +327,18 @@ readClonotypeSet <- function(fileList, cores=1L, aligner=c("ClonotypeR", "rTCR",
 # @example
 RepSeqExp <- function(clonotypetab, sampleinfo=NULL) {
     coltab <- c("lib", "V", "J", "CDR3aa", "CDR3dna", "VpJ", "VJ", "score", "count")
-<<<<<<< HEAD
-    if (missing(clonotypetab)) stop("a clonotype table is expected.")
-    if (!is.data.table(clonotypetab)) setDT(clonotypetab)
-    if (all(grepl(paste(coltab, collapse="|"), colnames(clonotypetab)))) 
-        stop("Column names of clonotype table must contain lib, V, J, CDR3aa, CDR3dna, VpJ, VJ, score, count")
-=======
     if (missing(clonotypetab)) stop("clonotyetable is missing, a clonotype table is expected.")
     if (!is.data.table(clonotypetab)) setDT(clonotypetab)
     if (!all(grepl(paste(coltab, collapse="|"), colnames(clonotypetab)))) {
         stop("Column names of clonotype table must contain lib, V, J, CDR3aa, CDR3dna, VpJ, VJ, score, count")
         }
->>>>>>> 7c1db780e92b6f0c137c60650541a61c03f754a9
     stats <- clonotypetab[, c(.(nReads=sum(count)), lapply(.SD, uniqueN)), by="lib", .SDcols=c("VpJ", "V", "J", "VJ", "CDR3aa")]
     sNames <- unique(clonotypetab$lib)
-    if (is.null(sampleinfo)) 
-        sampleinfo <- data.frame(cbind(sample=sNames, stats), row.names=sNames)
+    if (is.null(sampleinfo)) {
+        sampleinfo <- data.frame(cbind(sample=sNames, stats), row.names=sNames) 
+        } else {
+            sampleinfo <- data.frame(cbind(sampleinfo, stats), row.names=sNames)
+        }
     x.hist <- data.frame(history = paste0("RepSeqExp; clononotypetab=", deparse(substitute(clonotypetab)), "; sampleinfo=", deparse(substitute(sampleinfo))), stringsAsFactors=FALSE)
     out <- methods::new("RepSeqExperiment", assayData=clonotypetab, sampleData=sampleinfo, metaData=list(), History=x.hist) 
     return(out)
@@ -580,7 +576,7 @@ concateRepSeq <- function(a, b) {
     if (missing(a) | missing (b)) stop("Two RepSeqExperiment objects are required.")
     if (!is.RepSeqExperiment(a)) stop("a is not an object of class RepSeqExperiment.")
     if (!is.RepSeqExperiment(b)) stop("b is not an object of class RepSeqExperiment.")
-    if (any(rownames(RepSeq::sData(a)) == rownames(RepSeq::sData(b)))) stop(paste("Sample in", a, "existing in ", b, "."))
+    if (any(rownames(RepSeq::sData(a)) == rownames(RepSeq::sData(b)))) stop("Common sample names are not allowed, please use the function names()<- to rename them.")
     cts <- rbind(RepSeq::assay(a), RepSeq::assay(b))
     cts[, lib:=as.character(lib)]
     sampleinfo <- rbind(RepSeq::sData(a), RepSeq::sData(b))

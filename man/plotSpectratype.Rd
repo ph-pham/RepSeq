@@ -4,16 +4,18 @@
 \alias{plotSpectratype}
 \title{plot spectratype}
 \usage{
-plotSpectratype(x, sampleName = NULL)
+plotSpectratype(x, sampleName = NULL, scale = c("counts", "percent", "cpm"))
 }
 \arguments{
 \item{x}{an object of class [\code{\linkS4class{RepSeqExperiment}}]}
 
 \item{sampleName}{sample to plot, if NULL the first sample of x is plotted.}
+
+\item{scale}{the type of bars in term of counts, percentages or count per million.}
 }
 \value{
 a barplot
 }
 \description{
-function plots spectratype for V genes of a repertoire.
+function plots spectratype for V genes of one repertoire (distribution of lengths of CDR3 in amio-acid).
 }

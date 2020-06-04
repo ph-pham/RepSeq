@@ -1,6 +1,6 @@
 # without this, there is a warning during check
 # data.table variables
-utils::globalVariables(c("J", ".", "VpJ", "lib", "V", "J", "VJ"))
+utils::globalVariables(c("J", ".", "VpJ", "lib", "V", "J", "VJ", "..cols", "..n.."))
 
 #------------------------------------------------------------------
 # Define the class
