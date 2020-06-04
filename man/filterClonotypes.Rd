@@ -4,8 +4,13 @@
 \alias{filterClonotypes}
 \title{filter clonotypes}
 \usage{
-filterClonotypes(raw, keep.ambiguous = FALSE,
-  keep.unproductive = FALSE, aa.th = 8, outFiltered = F)
+filterClonotypes(
+  raw,
+  keep.ambiguous = FALSE,
+  keep.unproductive = FALSE,
+  aa.th = 8,
+  outFiltered = F
+)
 }
 \arguments{
 \item{raw}{a clonotype table.}

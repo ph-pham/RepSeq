@@ -3,8 +3,13 @@
 export(Chaowor)
 export(RepSeqExp)
 export(basicIndices)
+export(concateRepSeq)
 export(countFeatures)
 export(divLevel)
+<<<<<<< HEAD
+=======
+export(dropSamples)
+>>>>>>> 7c1db780e92b6f0c137c60650541a61c03f754a9
 export(estimateSF)
 export(filetype)
 export(filterClonotypes)

@@ -117,11 +117,13 @@ setReplaceMethod(f = "assay",
     signature = "RepSeqExperiment", 
     definition = function(object, i, j, value) {
         set(object@assayData, i, j, value)
+        #object@assayData <- value
+        object
         }
 )
 
 #------------------------------------------------------------------
-# feature data
+# meta data
 #------------------------------------------------------------------
 #' @rdname RepSeqExperiment-class
 #' @aliases mData
@@ -193,7 +195,7 @@ setReplaceMethod(
 
 #' @rdname RepSeqExperiment-class
 #' @aliases History
-# @aliases History,RepSeqExperiment-method
+#' @aliases History,RepSeqExperiment-method
 setMethod(f = "History",
     signature = "RepSeqExperiment",
     definition = function(object) object@History
@@ -216,6 +218,9 @@ setReplaceMethod(f = "History",
         }
 )
 
+#------------------------------------------------------------------
+# display object
+#------------------------------------------------------------------
 # display the object
 # @title The method show is defined in the class [\code{\linkS4class{RepSeqExperiment}}]
 # @param object an object of class [\code{\linkS4class{RepSeqExperiment}}]    	
@@ -224,7 +229,7 @@ setReplaceMethod(f = "History",
 
 #' @rdname RepSeqExperiment-class
 #' @aliases show,RepSeqExperiment-method
-setMethod("show","RepSeqExperiment",
+setMethod("show", "RepSeqExperiment",
 function(object) {
     cts <- assay(object)
     sNames <- unique(cts$lib)
@@ -233,18 +238,46 @@ function(object) {
     V <- cts[, unique(V)]
     J <- cts[, unique(J)]
     VJ <- cts[, uniqueN(VJ)]
-	cat("An object of class \"", class(object), "\"\n",sep="")
+	cat("An object of class \"", class(object), "\"\n", sep="")
 	cat("Dimension                  :", m, "clonotypes,", n, "samples\n")
     cat("Number of V genes          :", length(V), "-", V[1:3], "...", V[length(V)], "\n")
 	cat("Number of J genes          :", length(J), "-", J[1:3], "...", J[length(J)], "\n")
 	cat("Number of V-J genes        :", VJ, "\n")
 	#cat("Number of peptide sequences:", length(unique(cts$CDR3aa)), "\n")
 	if (n < 4) {
-	   cat("Sample names:               ", sNames[1:n], "\n")
+	   cat("Sample names               :", sNames[1:n], "\n")
 	   } else {
-	       cat("Sample names:               ", sNames[1:3], "...", sNames[n],"\n")
+	       cat("Sample names               :", sNames[1:3], "...", sNames[n],"\n")
 	   }
 })
+
+#' @rdname RepSeqExperiment-class
+#' @aliases names
+#' @aliases names,RepSeqExperiment-method
+setMethod(f = "names",
+    signature(x="RepSeqExperiment"),
+    definition = function(x) {
+        rownames(sData(x))
+    }
+)
+
+#' @rdname RepSeqExperiment-class
+#' @aliases names
+#' @aliases names,RepSeqExperiment-method
+setReplaceMethod(f = "names",
+    signature(x="RepSeqExperiment", value="ANY"),
+    definition = function(x, value) {
+        oldnames <- rownames(sData(x))
+        rownames(sData(x)) <- value
+        snames <- unique(assay(x)[["lib"]])
+        for (l in 1:length(snames)) {
+            set(assay(x), i=which(assay(x)[["lib"]] == snames[l]), j="lib", value=value[l])
+        }
+    History(x) <- data.frame(rbind(History(x), 
+                data.frame(history=paste(date(), "- updated sample names", paste0(snames, collapse=", "), "from", paste0(snames, collapse=", "), "using names()"))))
+    x
+    }
+)
 
 # set validity
 setValidity("RepSeqExperiment", function(object) {
@@ -253,6 +286,10 @@ setValidity("RepSeqExperiment", function(object) {
     if (!identical(unique(assay(object)$lib), rownames(sData(object)))) {
         valid <- FALSE
         msg <- c(msg, "lib column in countData must contain sampleData row names.")
+    }
+    if (!any(assay(object)$count %% 1 == 0)) {
+        valid <- FALSE
+        msg <- c(msg, "some count in assay are not integers.")
     }
     if (valid) TRUE else msg
 })

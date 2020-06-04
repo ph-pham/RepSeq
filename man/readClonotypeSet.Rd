@@ -4,9 +4,16 @@
 \alias{readClonotypeSet}
 \title{read clonotype table set}
 \usage{
-readClonotypeSet(fileList, cores = 1L, aligner = c("ClonotypeR",
-  "rTCR", "MiXCR"), chain = c("A", "B"), sampleinfo = NULL,
-  keep.ambiguous = FALSE, keep.unproductive = FALSE, aa.th = 8)
+readClonotypeSet(
+  fileList,
+  cores = 1L,
+  aligner = c("ClonotypeR", "rTCR", "MiXCR"),
+  chain = c("A", "B"),
+  sampleinfo = NULL,
+  keep.ambiguous = FALSE,
+  keep.unproductive = FALSE,
+  aa.th = 8
+)
 }
 \arguments{
 \item{fileList}{a list of file paths to import.}

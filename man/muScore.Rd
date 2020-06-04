@@ -4,8 +4,11 @@
 \alias{muScore}
 \title{compute multivariate score}
 \usage{
-muScore(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"),
-  type = c("count", "usage"))
+muScore(
+  x,
+  level = c("V", "J", "VJ", "VpJ", "CDR3aa"),
+  type = c("count", "usage")
+)
 }
 \arguments{
 \item{x}{a RepSeqExperiment object}

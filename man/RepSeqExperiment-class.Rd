@@ -21,6 +21,9 @@
 \alias{History<-,RepSeqExperiment-method}
 \alias{History<-}
 \alias{show,RepSeqExperiment-method}
+\alias{names,RepSeqExperiment-method}
+\alias{names}
+\alias{names<-,RepSeqExperiment-method}
 \alias{[,RepSeqExperiment,ANY,ANY,ANY-method}
 \alias{[,RepSeqExperiment-method}
 \alias{is.RepSeqExperiment}
@@ -59,6 +62,10 @@ History(object) <- value
 \S4method{History}{RepSeqExperiment}(object) <- value
 
 \S4method{show}{RepSeqExperiment}(object)
+
+\S4method{names}{RepSeqExperiment}(x)
+
+\S4method{names}{RepSeqExperiment}(x) <- value
 
 \S4method{[}{RepSeqExperiment,ANY,ANY,ANY}(x, i, j, drop)
 

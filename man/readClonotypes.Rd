@@ -4,9 +4,15 @@
 \alias{readClonotypes}
 \title{read clonotype table}
 \usage{
-readClonotypes(x, aligner = c("ClonotypeR", "rTCR", "MiXCR"),
-  chain = c("A", "B"), keep.ambiguous = FALSE,
-  keep.unproductive = FALSE, aa.th = 8, outFiltered = F)
+readClonotypes(
+  x,
+  aligner = c("ClonotypeR", "rTCR", "MiXCR"),
+  chain = c("A", "B"),
+  keep.ambiguous = FALSE,
+  keep.unproductive = FALSE,
+  aa.th = 8,
+  outFiltered = F
+)
 }
 \arguments{
 \item{x}{a path to a clonotype file, for the moment, only TSV from ClonotypeR is supported.}

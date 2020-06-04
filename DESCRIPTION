@@ -25,4 +25,4 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
 LinkingTo: Rcpp
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.1

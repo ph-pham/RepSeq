@@ -4,8 +4,12 @@
 \alias{plotRenyiProfiles}
 \title{plot Renyi's profiles}
 \usage{
-plotRenyiProfiles(x, alpha = c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64,
-  Inf), level = c("VpJ", "V", "J", "VJ", "CDR3aa"), colorBy = NULL)
+plotRenyiProfiles(
+  x,
+  alpha = c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, Inf),
+  level = c("VpJ", "V", "J", "VJ", "CDR3aa"),
+  colorBy = NULL
+)
 }
 \arguments{
 \item{x}{an object of class RepSeqExperiment}
