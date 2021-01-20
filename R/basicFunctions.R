@@ -11,7 +11,7 @@ utils::globalVariables(c("J", ".", "..sNames", ".SD", ".SDcols", "key", ".N", "c
 #' @export
 #' @example
 #' \dontrun{
-#' parseClonotypeR()
+#' parseClonotypeR(path, chain="B")
 #' }
 parseClonotypeR <- function(path, chain=c("A", "B")) {
     if (path == "" | missing(path))  stop("Empty file name.")
