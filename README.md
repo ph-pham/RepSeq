@@ -23,7 +23,7 @@ if(length(pkgs)>0) install.packages(pkgs)
 The latest developement package could be installed from GitHub using **devtools**.
 
 ```r
-install.packages(devtools)  # if necessary
+install.packages("devtools")  # if necessary
 devtools::install_github("ph-pham/RepSeq")
 library(RepSeq)
 ```

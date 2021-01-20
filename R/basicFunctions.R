@@ -9,8 +9,10 @@ utils::globalVariables(c("J", ".", "..sNames", ".SD", ".SDcols", "key", ".N", "c
 #' @param chain TCR chain \code{A} or [code{B} to extract. Default value is \code{A}.
 #' @return a data.table having 7 columns. \code{lib} name of the repertoire, \code{V} V gene identification, \code{J} J gene identification, \code{CDR3aa} CDR3aa chain, \code{CDR3dna} CDR3 DNA chain, \code{score} mapq quality score, \code{count} clonotype assay. Clonotypes were deleted if CDR3aa chain contains STOP codon (*), CDR3dna length is not divisible by 3 or CDR3dna chain contains base "N". 
 #' @export
-# @example
-# parseClonotypeR()
+#' @example
+#' \dontrun{
+#' parseClonotypeR()
+#' }
 parseClonotypeR <- function(path, chain=c("A", "B")) {
     if (path == "" | missing(path))  stop("Empty file name.")
     tab=V=CDR3dna=CDR3aa=V=lib <- NULL
@@ -264,7 +266,7 @@ readClonotypeSet <- function(fileList, cores=1L, aligner=c("ClonotypeR", "rTCR",
     if (cores > 1) {   
         Sys.sleep(0.1)
         cat("Loading and filtering clonotypes...\n") 
-        cl <- parallel::makeCluster(cores)
+        cl <- parallel::makeCluster(cores, setup_strategy = "sequential")
         parallel::clusterExport(cl=cl, varlist=c("filetype", "readClonotypes", "parseClonotypeR", "parseRTCR", "parseMiXCR", "filterClonotypes", "setnames"))     
         repList <- pbapply::pblapply(cl=cl, fileList, readClonotypes, aligner=parser, chain=ch, keep.ambiguous=keep.ambiguous, keep.unproductive=keep.unproductive, aa.th=8)
         parallel::stopCluster(cl) 

@@ -285,7 +285,7 @@ setValidity("RepSeqExperiment", function(object) {
     valid <- TRUE
     if (!identical(unique(assay(object)$lib), rownames(sData(object)))) {
         valid <- FALSE
-        msg <- c(msg, "lib column in countData must contain sampleData row names.")
+        msg <- c(msg, "column lib in assayData must contain sampleData row names.")
     }
     if (!any(assay(object)$count %% 1 == 0)) {
         valid <- FALSE
