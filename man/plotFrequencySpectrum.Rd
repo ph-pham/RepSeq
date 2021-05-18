@@ -11,11 +11,20 @@ plotFrequencySpectrum(x, colorBy = NULL, groupBy = FALSE)
 
 \item{colorBy}{color by factor name}
 
-\item{groupBy}{boolean if summary by factor or not}
+\item{groupBy}{boolean if compute the mean by factor or not}
 }
 \value{
 a graph
 }
 \description{
 function plots frequency of
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+# Show column names 
+names(sData(RepSeqData))
+plotFrequencySpectrum(x = RepSeqData, colorBy = "project", groupBy = TRUE)
+}
 }

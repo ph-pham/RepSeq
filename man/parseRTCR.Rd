@@ -15,3 +15,16 @@ a data.table
 \description{
 function imports clonotype tables produced by rTCR aligner.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/rtcr'), 
+                 package = 'RepSeqData'), 
+                 full.names = TRUE)
+l
+# first element of the vector
+path <- l[1]
+dataset <- parseRTCR(path, chain = "B")
+dataset
+}
+}

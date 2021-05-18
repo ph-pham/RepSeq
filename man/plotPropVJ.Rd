@@ -26,3 +26,12 @@ a barplot
 \description{
 function plots V or J proportion in all samples in a RepSeqExperiment object.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+snames <- rownames(sData(RepSeqData))
+# plot percentages of V compared to the library size of in the second sample.
+plotPropVJ(x = RepSeqData, level = "V", sampleName = snames[2], scale = "counts")
+}
+}

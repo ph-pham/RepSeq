@@ -9,12 +9,18 @@
 #' @param level of repertoire to analyze \code{VpJ, VJ, V, J, CDR3aa}.
 #' @return a DESeqDataSet object
 #' @export
-# @example
-# example here
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' sData(RepSeqData)
+#' dds <- toDESeq2(x = RepSeqData, conditions = "project" , level = "VJ")
+#' dds
+#' }
 toDESeq2 <- function(x, conditions, level=c("VpJ", "V", "J", "VJ", "CDR3aa")) {
     # test 
-    if (missing(x)) stop("x is missing.")
-    if (!is.RepSeqExperiment(x)) stop("a RepSeqCount object is expected.")
+    if (missing(x)) stop("x is missing. An object of class RepSeqExperiment is epxected.")
+    if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
     if (missing(conditions)) stop("user musts provide at least 1 condition.")    
     # get sample info
     coldat <- sData(x)[, conditions, drop=FALSE]
@@ -24,16 +30,15 @@ toDESeq2 <- function(x, conditions, level=c("VpJ", "V", "J", "VJ", "CDR3aa")) {
     levelChoice <- match.arg(level)
     cts <- countFeatures(x, level=levelChoice)
     if (length(conditions) > 1) conditions <- paste(conditions, collapse="+")
-    rownames(coldat) <- gsub("-", ".", rownames(coldat))
-    cts <- data.frame(cts, row.names=1)
-    colnames(cts) <- gsub("-", ".", colnames(cts))
+    #rownames(coldat) <- gsub("-", ".", rownames(coldat))
+    cts <- data.frame(cts, row.names=1, check.names=FALSE)
+    #colnames(cts) <- gsub("-", ".", colnames(cts))
     cts <- cts[, match(rownames(coldat),colnames(cts))]
     dds <- DESeq2::DESeqDataSetFromMatrix(countData = cts, colData = coldat, design = as.formula(paste0("~" ,conditions)))
     return(dds)
 }
 
-
-#' estimate size factor`
+#' estimate size factor
 #'
 #' function 
 #'
@@ -42,8 +47,8 @@ toDESeq2 <- function(x, conditions, level=c("VpJ", "V", "J", "VJ", "CDR3aa")) {
 #' @param method normaliztion method used for size factor computation.
 #' @param UsePseudoRef a boolean indicating if Chao indices will be computed according to a reference repertoire (geometric mean repertoire across all samples). 
 #' @return a vector of normalized size factors
-#' @export
-# @example
+# @export
+# @examples
 estimateSF <- function(x, level=c("VpJ", "CDR3aa"), method=c("Chao", "iChao", "worChao", "Chao.gmmean", "Chao.median"), UsePseudoRef=TRUE) {
     # test 
     if (missing(x)) stop("x is missing.")
@@ -56,7 +61,7 @@ estimateSF <- function(x, level=c("VpJ", "CDR3aa"), method=c("Chao", "iChao", "w
     }
     levelChoice <- match.arg(level)
     meth <- match.arg(method)
-    dat <- copy(assay(x))
+    dat <- data.table::copy(assay(x))
     chao1 <- ichao <- chaowor <- sj <- s0 <- NULL
 #    if (meth == "GMPR") {
 #        cts <- countFeatures(x, level=levelChoice)
@@ -114,9 +119,14 @@ estimateSF <- function(x, level=c("VpJ", "CDR3aa"), method=c("Chao", "iChao", "w
 #' @param type type of data to compute muScore, \code{count} or \code{usage}.
 #' @return a data.table ordered by the multivariate decreasing scores. The last column contains the multivariate score.
 #' @export
-# @example
-# example here
-muScore <- function(x, level=c("V", "J", "VJ", "VpJ", "CDR3aa"), type=c("count", "usage")) {
+#' @examples
+#' \dontrun{
+#' ## The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' res <- muScore(x = RepSeqData, level = "V", type = "count")
+#' res
+#' }
+muScore <- function(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"), type = c("count", "usage")) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("a RepSeqExperiment object is expected.")
     score <- NULL
@@ -176,7 +186,7 @@ muScore <- function(x, level=c("V", "J", "VJ", "VpJ", "CDR3aa"), type=c("count",
 # @param alternative 
 # @param
 # @export
-# @example
+# @examples
 
 #mimi.test <- function(x, y, alternative="both", method=c("obrien", "wittkowski", "comb")) {
 #    if (missing(x)) stop("x is missing.")
@@ -234,21 +244,87 @@ named.contr.sum <- function(x, ...) {
 #' @param method method used for normalization. 
 #' @param UsePseudoRef a boolen indicatif whether a reference repertoire will be used for normalizaition. 
 #' @return an object of class RepSeqExperiment with normalized counts.
-#' @export
-# @example
+# @export
+# @examples
 # Discussion https://support.bioconductor.org/p/66067/
 normalizeCounts <- function(x, method=c("Chao", "iChao", "worChao", "Chao.gmmean", "Chao.median"), UsePseudoRef=TRUE) {
     # test 
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("a RepSeqCount object is expected.")
     choice <- match.arg(method)
-    dat <- copy(assay(x))
+    dat <- data.table::copy(assay(x))
     sampleinfo <- sData(x) 
     sf <- estimateSF(x, level="VpJ", method=choice, UsePseudoRef=UsePseudoRef)
     dat[, count:=count/rep(sf, table(dat$lib))]
     sampleinfo$sf <- sf
     x.hist <- data.frame(rbind(History(x), history = paste0("normalizedCounts; x=", deparse(substitute(x)), "; method=", choice, "; UsePseudoRef=", UsePseudoRef)), stringsAsFactors = FALSE)
     out <- methods::new("RepSeqExperiment", assayData=dat, sampleData=sampleinfo, metaData=mData(x), History=x.hist) 
+}
+
+#' perturbation scores computation
+#' 
+#' function computes the perturbation scores as a distance between each repertoire and the mean repertoire of the control group.
+#' @param x an object of class RepSeqExperiment.
+#' @param ctrl.names a vector of characters indicating the names of samples used as control repertoire.
+#' @param distance distance used for perturbation calculus.
+#' @param p an integer, the power of Minkowski distance. Default p = 2.
+#' @return a data frame containing perturbation scores for each V-genes.
+#' @export
+#' @examples
+#' \dontrun{
+#' ## The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' rownames(sData(RepSeqData))
+#' pert <- perturbation(RepSeqData, ctrl.names = c("S01", "S02", "S03"), distance = "manhattan")
+#' pert
+#'}
+perturbation <- function(x, ctrl.names, distance = c("manhattan", "euclidean", "canberra", "minkowski" ,"maximum"), p = 2) {
+    if (missing(x)) stop("x is missing, an object of class RepSeqExperiment is expected.")
+    if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
+    # get sample names
+    snames <- rownames(sData(x))
+    if (missing(ctrl.names)) stop("ctrl.names is missing. A vector of characters containing the names of control samples is expected.")
+    if (!any(ctrl.names %in% snames)) stop("all sample names in ctrl.names are not found in sampleData.") 
+    # get clonotype table
+    cts <- data.table::copy(assay(x))
+    # compute aa sequence length
+    cts[, CDR3aa.length:=nchar(CDR3aa)]
+    # compute count according to sample, V & cdr3 length
+    spectratype <- cts[, .(count=sum(count)), by=.(lib, V, CDR3aa.length)]
+    # convert count into proportion
+    spectratype[,pct:=prop.table(count), by=.(lib, V)]
+    # cast data into wide format 
+    spectratypew <- dcast(spectratype, V+CDR3aa.length~lib, value.var="pct", fill=0)
+    # sort data according to V and CDR3 length
+    setkey(spectratypew, V, CDR3aa.length)
+    # mean over control group
+    spectratypew[, ctrl.mean:=rowMeans(.SD), .SDcols=ctrl.names]
+    # create unique ID in order to convert data.table to data frame
+    spectratypew[, ID:=paste0(V, "_", CDR3aa.length)]
+    # 
+    spectratypem <- melt(spectratypew, id.vars=c("ID", "V", "CDR3aa.length", "ctrl.mean"), variable.name = "lib", value.name = "pct")
+    # compute perturbation score in long format
+    d <- tolower(match.arg(distance))
+    ctrl.dist <- switch(d, 
+    manhattan = {
+        spectratypem[, .(perturb=sum(abs(pct-ctrl.mean))),by=.(lib, V)]
+    },
+    euclidean = {
+        spectratypem[, .(perturb=sqrt(sum((pct-ctrl.mean)^2))),by=.(lib, V)]
+    },
+    maximum = {
+        spectratypem[, .(perturb=abs(max(pct-ctrl.mean))),by=.(lib, V)]
+    },
+    minkowski = {
+        spectratypem[, .(perturb=(sum((pct-ctrl.mean)^p))^(1/p)),by=.(lib, V)]
+    },
+    canberra = {
+        spectratypem[, .(perturb=sum(abs(pct-ctrl.mean)/(abs(pct) + abs(ctrl.mean)))),by=.(lib, V)]
+    })
+    # convert long format to wide format 
+    ctrl.distw <- dcast(ctrl.dist, V~lib, value.var="perturb")
+    out <- data.frame(ctrl.distw, row.names=1, check.names=FALSE)
+    return(out)
 }
 
 

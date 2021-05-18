@@ -17,3 +17,20 @@ an object of class RepSeqExperiment
 \description{
 function creates RepSeqExperiment object from clonotype tables.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/mixcr'), 
+                     package = 'RepSeqData'), 
+                     full.names = TRUE)
+l# list of gz-compressed files 
+sampleData <- read.table(system.file(file.path('extdata/sampledata.txt'), 
+                     package='RepSeqData'), 
+                     sep = "\t", 
+                     row.names = 2) 
+clontab.tmp <- lapply(l, readClonotypes, aligner="MiXCR")
+clontab <- data.table::rbindlist(dataset.tmp)
+dataset <- RepSeqExp(clontab, sampleinfo = sampleData)
+dataset
+}
+}

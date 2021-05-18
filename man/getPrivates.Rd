@@ -15,3 +15,11 @@ an object of class [\code{\linkS4class{RepSeqExperiment}}]
 \description{
 function returns private clonotyes which expressed only in one sample
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+privateClones <- getPrivates(RepSeqData) # get only private clonotypes
+provateClones
+}
+}

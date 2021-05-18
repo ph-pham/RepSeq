@@ -15,3 +15,10 @@ a value of Chao1
 \description{
 function compute the correct
 }
+\examples{
+set.seed(1234)
+x <- rbinom(20, 5, 0.5)
+y <- rbinom(20, 20, 0.1)
+Chaowor(x)
+Chaowor(y)
+}

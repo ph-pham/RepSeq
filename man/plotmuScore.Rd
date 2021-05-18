@@ -19,3 +19,12 @@ a heatmap
 \description{
 function plots a heatmap of counts or percentages of sorted
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+names(sData(RepSeqData))
+plot a heatmap of count/usage of repertoire level sorted by the muScore
+plotmuScore(x = RepSeqData, level = "V", type = "count")    
+}
+}

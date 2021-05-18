@@ -7,13 +7,13 @@ utils::globalVariables(c("J", ".", "VpJ", "lib", "V", "J", "VJ", "..cols", "..n.
 #------------------------------------------------------------------
 #' Class RepSeqExperiment
 #'
-#' An S4 class to represent a HTS RepSeq set.
+#' An S4 class to represent a Hight Throuput Sequencing Immune Repertoire Experiment. 
 #'
 #' @slot assayData a data.table containing information about clonotype.
 #' @slot sampleData a data frame containing sample information such as treatment groups, species, ...
 #' @slot metaData a list of meta data
 #' @slot History a data frame registering operations done on the object.
-#' @author H. P. Pham (mailto: hp.pham(a)iltoopharma.fr, twitter: #kiniou.est.mon.ami, #chokomlabreizh)
+#' @author H. P. Pham (mailto: hp.pham(a)pareanbiotech.fr, #chokomlabreizh)
 #' @rdname RepSeqExperiment-class
 #' @name RepSeqExperiment-class
 #' @exportClass RepSeqExperiment
@@ -232,22 +232,20 @@ setReplaceMethod(f = "History",
 setMethod("show", "RepSeqExperiment",
 function(object) {
     cts <- assay(object)
-    sNames <- unique(cts$lib)
-    n <- length(sNames)
-    m <- cts[, uniqueN(VpJ)]
-    V <- cts[, unique(V)]
-    J <- cts[, unique(J)]
-    VJ <- cts[, uniqueN(VJ)]
+    sNames <- unique(cts, by = "lib")$lib
+    V <- sort(unique(cts, by = "V")$V)
+    J <- sort(unique(cts, by = "J")$J)
+    m <- cts[, .(n = uniqueN(lib), V = uniqueN(V), J = uniqueN(J), m = uniqueN(VpJ), VJ = uniqueN(VJ))]
 	cat("An object of class \"", class(object), "\"\n", sep="")
-	cat("Dimension                  :", m, "clonotypes,", n, "samples\n")
-    cat("Number of V genes          :", length(V), "-", V[1:3], "...", V[length(V)], "\n")
-	cat("Number of J genes          :", length(J), "-", J[1:3], "...", J[length(J)], "\n")
-	cat("Number of V-J genes        :", VJ, "\n")
+	cat("Dimension                  :", m$m, "clonotypes,", m$n, "samples\n")
+    cat("Number of V genes          :", m$V, "-", V[1:3], "...", V[m$V], "\n")
+	cat("Number of J genes          :", m$J, "-", J[1:3], "...", J[m$J], "\n")
+	cat("Number of V-J genes        :", m$VJ, "\n")
 	#cat("Number of peptide sequences:", length(unique(cts$CDR3aa)), "\n")
-	if (n < 4) {
-	   cat("Sample names               :", sNames[1:n], "\n")
+	if (m$n < 4) {
+	   cat("Sample names               :", sNames[1:m$n], "\n")
 	   } else {
-	       cat("Sample names               :", sNames[1:3], "...", sNames[n],"\n")
+	       cat("Sample names               :", sNames[1:3], "...", sNames[m$n],"\n")
 	   }
 })
 

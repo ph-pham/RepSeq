@@ -10,7 +10,7 @@ plotDissimilarityMatrix(
   method = c("manhattan", "euclidean", "canberra", "clark", "bray", "kulczynski",
     "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup", "binomial",
     "chao", "cao", "mahalanobis"),
-  binary = "FALSE"
+  binary = FALSE
 )
 }
 \arguments{
@@ -27,4 +27,12 @@ a heatmap
 }
 \description{
 function plot a heatmap of a squared distance matrix computed between samples
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+# plot heatmap of dissimilarity matrix.
+plotDissimilarityMatrix(x = RepSeqData, level = "V", method = "euclidean")
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/statFunctions.R
 \name{estimateSF}
 \alias{estimateSF}
-\title{estimate size factor`}
+\title{estimate size factor}
 \usage{
 estimateSF(
   x,

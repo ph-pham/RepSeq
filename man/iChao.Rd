@@ -15,3 +15,10 @@ improved Chao1 value (ref) Chao and Lin Chao, A. and Lin, C.-W. (2012) Nonparame
 \description{
 function computes the improve version of Chao1
 }
+\examples{
+set.seed(1234)
+x <- rbinom(20, 5, 0.5)
+y <- rbinom(20, 20, 0.1)
+iChao(x)
+iChao(y)
+}

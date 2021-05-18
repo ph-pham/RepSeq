@@ -19,3 +19,12 @@ a DESeqDataSet object
 \description{
 function transforms a RepSeqCount object to an DESeqDataSet object
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+sData(RepSeqData)
+dds <- toDESeq2(x = RepSeqData, conditions = "project" , level = "VJ")
+dds
+}
+}

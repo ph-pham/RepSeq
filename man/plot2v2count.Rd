@@ -26,3 +26,12 @@ a dot plot
 \description{
 function plots
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+rownames(sData(RepSeqData))
+plot correlation of counts between 2 samples 
+plot2v2count(x = RepSeqData, level = "V", libs = c("S01", "S02"), scale = "log")    
+}
+}

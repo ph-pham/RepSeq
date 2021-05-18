@@ -26,3 +26,12 @@ a graph
 \description{
 function plots Renyi's entropy profile for all samples in a RepSeqExperiment object.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+colnames(sData(RepSeqData))
+# plot Renyi's profiles for at level "V" gene and color curves by project.
+plotRenyiProfiles(x = RepSeqData, level = "V", colorBy = "project")
+}
+}

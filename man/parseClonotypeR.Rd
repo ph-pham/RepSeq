@@ -17,3 +17,8 @@ a data.table having 7 columns. \code{lib} name of the repertoire, \code{V} V gen
 \description{
 function imports clonotype tables produced by ClonotypeR aligner.
 }
+\examples{
+\dontrun{
+dataset <- parseClonotypeR(path, chain="B")
+}
+}

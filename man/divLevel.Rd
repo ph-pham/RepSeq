@@ -29,3 +29,11 @@ a data.table of diversity indices computed at the level "level".
 \description{
 function computes diversity indices for level \code{VJ}, \code{V} or \code{J}
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+divindices <- divLevel(x = RepSeqData, index = "shannon", level = "VJ")
+divindices
+}
+}

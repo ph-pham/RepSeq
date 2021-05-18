@@ -7,12 +7,14 @@
 readClonotypeSet(
   fileList,
   cores = 1L,
-  aligner = c("ClonotypeR", "rTCR", "MiXCR"),
+  aligner = c("MiXCR", "Adaptive", "rTCR", "ClonotypeR"),
   chain = c("A", "B"),
   sampleinfo = NULL,
   keep.ambiguous = FALSE,
   keep.unproductive = FALSE,
-  aa.th = 8
+  filterSingleton = FALSE,
+  aa.th = 8,
+  raretab = TRUE
 )
 }
 \arguments{
@@ -20,21 +22,51 @@ readClonotypeSet(
 
 \item{cores}{an interger number of cores to use. Default is 1.}
 
-\item{aligner}{software used to align reads ("rTCR", "ClonotypeR" or "MiXCR").}
+\item{aligner}{software used to align reads ("Adaptive", "rTCR", "ClonotypeR" or "MiXCR"). Default is MiXCR.}
 
 \item{chain}{an character indicates which TCR chain alpha or beta to import, Use \code{A} for alpha chain and \code{B} for beta chain. Default is \code{A}.}
 
 \item{sampleinfo}{a data frame containing sample information for each clonotype file in fileList. The number of rows of sampleinfo must be identical to the number of file in fileList. A data frame containing If NULL}
 
-\item{keep.ambiguous}{a boolean choice if ambiguous clonotypes (contain STOP codon) should be kept in analysis. Default is \code{FALSE}.}
+\item{keep.ambiguous}{a boolean. If TRUE, ambiguous clonotypes (contain STOP codon) will be kept in analysis. Default is \code{FALSE}.}
 
-\item{keep.unproductive}{a boolean choice if unproductive clonotypes (Euclidean dividion of aa length by 3 > 0) should be kept in analysis. Default is \code{FALSE}.}
+\item{keep.unproductive}{a boolean. If TRUE, unproductive clonotypes (Euclidean dividion of aa length by 3 > 0) will be kept in analysis. Default is \code{FALSE}.}
+
+\item{filterSingleton}{a boolean. If TRUE clonotypes having 1 count in only 1 sample will be removed. Default is \code{FALSE}.}
 
 \item{aa.th}{an interger indicates the maximal number of amino acids could be deviated from the mean length. Default is 8.}
+
+\item{raretab}{a boolean indicating whether a rarefaction tab should be generated.}
 }
 \value{
 an object of class RepSeqExperiment.
 }
 \description{
 function reads all clonotype tables stored in a folder, filters reads and assay reads for each clonotype.
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/mixcr'), 
+                     package = 'RepSeqData'), 
+                     full.names = TRUE)
+l# list of gz-compressed files 
+sampleData <- read.table(system.file(file.path('extdata/sampledata.txt'), 
+                         package='RepSeqData'), 
+                         sep = "\t", 
+                         row.names = 2) 
+dataset <- readClonotypeSet(fileList = l, 
+                       cores=1L, 
+                       aligner = "MiXCR", 
+                       chain = "B", 
+                       sampleinfo = sampleData, 
+                       keep.ambiguous=FALSE, 
+                       keep.unproductive=FALSE, 
+                       aa.th=8,
+                       raretab = TRUE)
+dataset
+}
+}
+\seealso{
+\code{\link[RepSeq]{raretabRepSeq}}
 }

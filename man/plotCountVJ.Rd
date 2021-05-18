@@ -19,6 +19,15 @@ a heatmap
 \description{
 function plots a heatmap of V-J counts for sampleName
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+snames <- rownames(sData(RepSeqData))
+# plot heatmap of count for all V-J combinations for the first sample.
+plotCountVJ(x = RepSeqData, sampleName = snames[1], scale = "counts")
+}
+}
 \seealso{
 \code{\link[pheatmap]{pheatmap}}
 }

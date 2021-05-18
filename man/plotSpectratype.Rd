@@ -19,3 +19,12 @@ a barplot
 \description{
 function plots spectratype for V genes of one repertoire (distribution of lengths of CDR3 in amio-acid).
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+snames <- rownames(sData(RepSeqData))
+# plot Spectratype of the first sample, all V together.
+plotSpectratype(x = RepSeqData, sampleName = snames[1], scale = "counts")
+}
+}

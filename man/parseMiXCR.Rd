@@ -17,3 +17,15 @@ a data.table
 \description{
 function imports clonotype tables produced by MiXCR aligner.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/mixcr'), 
+             package = 'RepSeqData'), 
+             full.names = TRUE)
+l # there are 6 gz-compressed files
+path <- l[1] # the first gz-compressed of the previous list
+dataset <- parseMiXCR(path, chain = "B")
+dataset
+}
+}

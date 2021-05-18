@@ -17,3 +17,26 @@ a data.table of assay with unique features in rows and samples in columns.
 \description{
 function assay reads by V, J or V-J genes.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/mixcr'), package = 'RepSeqData'), full.names = TRUE)
+l# list of gz-compressed files 
+sampleData <- read.table(system.file(file.path('extdata/sampledata.txt'), 
+                         package='RepSeqData'), 
+                         sep = "\t", 
+                         row.names = 2) 
+dataset <- readClonotypeSet(fileList = l, 
+                         cores=1L, 
+                         aligner = "MiXCR", 
+                         chain = "B",
+                         sampleinfo = sampleData, 
+                         keep.ambiguous=FALSE, 
+                         keep.unproductive=FALSE, 
+                         aa.th=8)
+dataset
+# produce a count matrix of VJ
+cts <- countFeatures(x = dataset, level = "VJ")
+cts
+}
+}

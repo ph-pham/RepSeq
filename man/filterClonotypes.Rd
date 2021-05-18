@@ -29,3 +29,23 @@ a filtered clonotype table.
 \description{
 function loads a clonotype table and applies a filter according to several conditions.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/mixcr'), 
+                 package = 'RepSeqData'), 
+                 full.names = TRUE)
+l
+# first element of the vector
+path <- l[1]
+dataset <- parseMiXCR(path, chain = "B")
+dataset
+datasetFilter <- filterClonotypes(raw = dataset, 
+                                  keep.ambigurous = FALSE, 
+                                  keep.ambiguous = FALSE, 
+                                  keep.unproductive = FALSE, 
+                                  aa.th = 8, 
+                                  outFiltered = F)
+datasetFilter
+}
+}

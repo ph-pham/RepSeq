@@ -17,3 +17,31 @@ a RepSeqExperiment object.
 \description{
 function concateRepSeq allow to concatenate 2 RepSeqExperiement objects. Overlaps in sample names are not allowed.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/mixcr'), 
+                         package = 'RepSeqData'), 
+                         full.names = TRUE)
+l
+# first element of the vector
+filelist1 <- l[1:3]
+dataset1 <- readClonotypeSet(fileList = filelist1, 
+                   aligner = "MiXCR", 
+                   chain = "B", 
+                   keep.ambiguous=FALSE, 
+                   keep.unproductive=FALSE, 
+                   aa.th=8)
+dataset1
+filelist2 <- l[4:6]
+dataset2 <- readClonotypeSet(fileList = filelist2, 
+                   aligner = "MiXCR", 
+                   chain = "B", 
+                   keep.ambiguous=FALSE, 
+                   keep.unproductive=FALSE, 
+                   aa.th=8)
+dataset2
+dataset <- concateRepSeq(a = dataset1, b = dataset2)
+dataset
+}
+}

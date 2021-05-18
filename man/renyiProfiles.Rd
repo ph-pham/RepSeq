@@ -23,3 +23,11 @@ a data.table containing Renyi's profiles computed for each repertoire
 \description{
 function computes Renyi profile for all samples in a RepSeqExperiment object
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+renyiNumbers <- renyiProfiles(RepSeqData, level = "VpJ")
+renyiNumbers
+}
+}

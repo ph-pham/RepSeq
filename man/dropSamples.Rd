@@ -9,11 +9,21 @@ dropSamples(x, samples)
 \arguments{
 \item{x}{a RepSeqExperiment object.}
 
-\item{samples}{a vector containing sample names to be removed or a vector of their positions in sampleData slot.}
+\item{samples}{a vector containing sample names to be removed or a vector integer of their positions in sampleData slot.}
 }
 \value{
 a RepSeqExperiment object.
 }
 \description{
 function allows to remove one or several samples from an RepSeqExperiment object.
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+# show sample names
+rownames(sData(RepSeqData)
+subsetRepSeqData <- dropSamples(x = RepSeqData, samples=c("S10", "S11", "S12")) 
+subsetRepSeqData
+}
 }

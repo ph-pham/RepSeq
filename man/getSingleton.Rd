@@ -15,3 +15,12 @@ an object of class \code{RepSeqExperiment}
 \description{
 function gets all clonotype having only 1 count across all samples
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+# get only singleton clonotypes
+singletonData <- getSingleton(RepSeqData) 
+singletonData
+}
+}

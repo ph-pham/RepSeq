@@ -17,3 +17,12 @@ a bar plot
 \description{
 function plot the histogram of counts for a sample broken into 6 intervals 1, ]1, 10], ]10, 100], ]100, 1000], ]1000, 10000], ]10000, more].
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+snames <- rownames(sData(RepSeqData))
+# plot histogramme of counts of the first sample.
+plotFreqVpJ(x = RepSeqData, sampleName = snames[1])
+}
+}

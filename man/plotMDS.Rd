@@ -28,3 +28,12 @@ a dot plot.
 \description{
 function computes pairwise distances between all libs for a chosen level. Then, multidimentional scaling (2 dimensions) is applied to the resulting matrix, ggplot was used to represente individuals on the scaling dimensions.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+colnames(sData(RepSeqData))
+# plot 2 first axes of multidimensional scaling performed on the dissimilarity matrix.
+plotMDS(x = RepSeqData, level = "V", method = "euclidean", colGrp = "project")
+}
+}

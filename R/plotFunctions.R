@@ -9,8 +9,14 @@
 #' @return a heatmap
 #' @export
 #' @seealso \code{\link[pheatmap]{pheatmap}}
-# @example
-# plotCountVJ()
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' snames <- rownames(sData(RepSeqData))
+#' # plot heatmap of count for all V-J combinations for the first sample.
+#' plotCountVJ(x = RepSeqData, sampleName = snames[1], scale = "counts")
+#' }
 plotCountVJ <- function(x, sampleName = NULL, scale = c("counts", "percent", "cpm")) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.") 
@@ -97,8 +103,14 @@ plotCountVJ <- function(x, sampleName = NULL, scale = c("counts", "percent", "cp
 #' @param scale the type of bars in term of counts, percentages or count per million.
 #' @return a barplot
 #' @export
-# @example
-# plotSpectratype
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' snames <- rownames(sData(RepSeqData))
+#' # plot Spectratype of the first sample, all V together.
+#' plotSpectratype(x = RepSeqData, sampleName = snames[1], scale = "counts")
+#' }
 plotSpectratype <- function(x, sampleName = NULL, scale = c("counts", "percent", "cpm")) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is epxected.") 
@@ -155,8 +167,14 @@ plotSpectratype <- function(x, sampleName = NULL, scale = c("counts", "percent",
 #' @param colorBy name of a factor in sample information data (run sData(x)) 
 #' @return a graph
 #' @export
-# @example
-# plotRenyiProfiles()
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' colnames(sData(RepSeqData))
+#' # plot Renyi's profiles for at level "V" gene and color curves by project.
+#' plotRenyiProfiles(x = RepSeqData, level = "V", colorBy = "project")
+#' }
 plotRenyiProfiles <- function(x, alpha = c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, Inf), level = c("VpJ", "V", "J", "VJ", "CDR3aa"), colorBy = NULL) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
@@ -187,7 +205,7 @@ plotRenyiProfiles <- function(x, alpha = c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64,
             data2plot <- data.table::melt(data = tmp, id.vars = "variable", measure.vars = sNames, variable.name = "lib")
             data2plot[, paste(colorBy) := lapply(.SD, function(x) sdata[x, colorBy]), .SDcols = "lib"]
             data2plot[, alpha := as.numeric(as.character(variable))]
-            p <- ggplot2::ggplot(data = data2plot, ggplot2::aes_string(x = "alpha", y = "value", colour = paste(colorBy))) +
+            p <- ggplot2::ggplot(data = data2plot, ggplot2::aes_string(x = "alpha", y = "value", colour = paste0("`", colorBy, "`"))) +
                     ggplot2::geom_line(ggplot2::aes(group = lib), size = 1.5) +
                     ggplot2::labs(title = paste("Level ",levelChoice, ": Renyi's Entropy"), y = "Renyi's Entropy") +
                     ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5, size = 14),
@@ -209,8 +227,14 @@ plotRenyiProfiles <- function(x, alpha = c(0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64,
 #' @param scale type of data to be plotted, counts, percentages or counts per million. 
 #' @return a barplot
 #' @export
-# @example
-# plotPropVJ
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' snames <- rownames(sData(RepSeqData))
+#' # plot percentages of V compared to the library size of in the second sample.
+#' plotPropVJ(x = RepSeqData, level = "V", sampleName = snames[2], scale = "counts")
+#' }
 plotPropVJ <- function(x, level = c("V", "J"), sampleName = NULL, scale = c("counts", "percent", "cpm")) {
     percent=cpm <- NULL
     if (missing(x)) stop("x is missing.")
@@ -249,7 +273,14 @@ plotPropVJ <- function(x, level = c("V", "J"), sampleName = NULL, scale = c("cou
 #' @param sampleName sample to be plotted. If NULL the first sample name is used.
 #' @return a bar plot
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' snames <- rownames(sData(RepSeqData))
+#' # plot histogramme of counts of the first sample.
+#' plotFreqVpJ(x = RepSeqData, sampleName = snames[1])
+#' }
 plotFreqVpJ <- function(x, sampleName = NULL){
     interval=percent <- NULL
     if (missing(x)) stop("x is missing.")
@@ -294,7 +325,14 @@ plotFreqVpJ <- function(x, sampleName = NULL){
 #' @param showCDR3 blabla
 #' @return a wrapped of barplots
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' snames <- rownames(sData(RepSeqData))
+#' # plot Spectratype of the first sample. One histogram per V gene.
+#' plotSpectratypeV(x = RepSeqData, sampleName = snames[1], scale = "counts")
+#' }
 plotSpectratypeV <- function(x, sampleName = NULL, scale = c("counts", "percent", "cpm"), showCDR3 = F) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is epxected.") 
@@ -389,12 +427,18 @@ plotSpectratypeV <- function(x, sampleName = NULL, scale = c("counts", "percent"
 #' @param binary if TRUE data will be transformed into present/absent data.
 #' @return a heatmap
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' # plot heatmap of dissimilarity matrix.
+#' plotDissimilarityMatrix(x = RepSeqData, level = "V", method = "euclidean")
+#' }
 plotDissimilarityMatrix <- function(x, level = c("VpJ", "V", "J", "VJ", "CDR3aa"), 
                                     method = c("manhattan", "euclidean", "canberra", "clark", "bray", "kulczynski", 
                                     "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup", 
                                     "binomial", "chao", "cao", "mahalanobis"), 
-                                    binary = "FALSE") {
+                                    binary = FALSE) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
     variable <- NULL
@@ -404,17 +448,14 @@ plotDissimilarityMatrix <- function(x, level = c("VpJ", "V", "J", "VJ", "CDR3aa"
     tmp <- data.table::copy(assay(x))[, ..cols]
     sdata <- sData(x)
     sNames <- rownames(sdata)
-    groups <- sdata[, unlist(lapply(sdata, is.factor)), drop = F]
+    groups <- sdata[, unlist(lapply(sdata, is.factor)), drop = FALSE]
     dat <- data.table::dcast(data = tmp, paste(levelChoice, "~lib"), value.var = "count", fun.aggregate = sum)
-    simmat <- dat[, vegan::vegdist(t(.SD), method = methodChoice, diag = TRUE, upper = TRUE, binary = as.logical(binary)), .SDcols=sNames]
-    if (requireNamespace("pheatmap", method = methodChoice, quietly = TRUE)) {
-        p <- pheatmap::pheatmap(simmat, main = paste0("dissimilarity heatmap : ", levelChoice), 
+    simmat <- dat[, vegan::vegdist(t(.SD), method = methodChoice, diag = TRUE, upper = TRUE, binary = binary), .SDcols=sNames]
+    pheatmap::pheatmap(simmat, main = paste0("dissimilarity heatmap : ", levelChoice), 
             cluster_rows = TRUE, cluster_cols = TRUE,
             treeheight_row = 0L, clustering_distance_rows = simmat, clustering_distance_cols = simmat, 
             annotation_col=groups, show_colnames=T, labels_col = sNames,
-            show_rownames=FALSE, clustering_method = "ward.D", silent = TRUE)
-    }
-    return(p)
+            show_rownames=FALSE, clustering_method = "ward.D", silent = FALSE)
 }
 
 #' biplot Multidimensional Scaling result
@@ -426,7 +467,14 @@ plotDissimilarityMatrix <- function(x, level = c("VpJ", "V", "J", "VJ", "CDR3aa"
 #' @param colGrp color by group of samples. A string of character containng the name of the varibale indicating group of samples (must be a column name in the slot sampleData). If NULL, the number of colors is equal to the number of sample.  
 #' @return a dot plot.
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' colnames(sData(RepSeqData))
+#' # plot 2 first axes of multidimensional scaling performed on the dissimilarity matrix.
+#' plotMDS(x = RepSeqData, level = "V", method = "euclidean", colGrp = "project")
+#' }
 plotMDS <- function(x, level = c("VpJ", "V", "J", "VJ", "CDR3aa"), 
                         method = c("manhattan", "euclidean", "canberra", "clark", "bray", "kulczynski", 
                         "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup", 
@@ -455,42 +503,22 @@ plotMDS <- function(x, level = c("VpJ", "V", "J", "VJ", "CDR3aa"),
     ade4::s.class(fit, fac = fact, col=1:nlevels(fact), sub = "Multidimensional scaling")
 }
 
-#, sub=paste("Level:", levelChoice, "; Distance:", methodChoice)
-# plotFrequencySpectrum <- function(x, groupBy = FALSE, colorBy = NULL){
-#   if (missing(x)) stop("x is missing.")
-#   if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
-#   if(!is.null(colorBy)){
-#     if (is.na(match(eval(colorBy), colnames(sData(x))))) stop(paste0(colorBy," not found in sData(x)."))
-#     sdata <- sData(x)
-#     counts <- assay(x)
-#     if(groupBy){
-#       counts[,paste(colorBy) := lapply(.SD, function(x){sdata[x, colorBy]}), .SDcols = "lib"]
-#       counts <- counts[,lapply(.SD, sum), by = c("VpJ", paste(colorBy)), .SDcols = "count"][,.N, by = c(paste(colorBy), "count")]
-#       print(head(counts))
-#       ggplot(data = counts, aes_string(x = "count", y = "N", colour = paste(colorBy))) + geom_point() +geom_line()+ scale_x_log10()
-#     }else{
-#       counts <- counts[,lapply(.SD, sum), by = c("VpJ", "lib"), .SDcols = "count"]
-#       counts[,paste(colorBy) := lapply(.SD, function(x){sdata[x, colorBy]}), .SDcols = "lib"]
-#       data2plot <- counts[,.N, by = c("lib", "count", paste(colorBy))]
-#       return(ggplot(data = data2plot, aes_string(x = "count", y = "N", colour = paste(colorBy))) + geom_point() +geom_line(aes(group = lib))+ scale_x_log10())
-# 
-#     }
-#   }
-#   else{
-#     counts <- assay(x)[,lapply(.SD, sum), by = .(VpJ, lib), .SDcols = "count"][,.N, by = .(lib, count)]
-#     ggplot(data = counts, aes(x = count, y = N, colour = lib)) + geom_point() +geom_line()+ scale_x_log10()
-#   }
-# }
-
 #' plot of frequency 
 #' 
 #' function plots frequency of 
 #' @param x x
 #' @param colorBy color by factor name
-#' @param groupBy boolean if summary by factor or not
+#' @param groupBy boolean if compute the mean by factor or not
 #' @return a graph
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' # Show column names 
+#' names(sData(RepSeqData))
+#' plotFrequencySpectrum(x = RepSeqData, colorBy = "project", groupBy = TRUE)
+#' }
 plotFrequencySpectrum <- function(x, colorBy = NULL, groupBy = FALSE) {
     N=std=group <- NULL
     if (missing(x)) stop("x is missing.")
@@ -526,60 +554,7 @@ plotFrequencySpectrum <- function(x, colorBy = NULL, groupBy = FALSE) {
     return(p)
 }
 
-# plot rarefaction curve
-#
-# function plot rarefaction curves
-# @param x
-# @param colorBy
-# @param groupBy
-# @return a graph 
-#plotRarefaction <- function(x, colorBy = NULL, groupBy = FALSE){
-#    if (missing(x)) stop("x is missing.")
-#    if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
-#    sdata <- sData(x)
-#    #print(colorBy)
-#    cts <- data.table::copy(assay(x))
-#    if (is.null(colorBy)) {
-#        dcounts <- data.table::dcast(cts, VpJ~lib, value.var = "count", fun.aggregate = sum)
-#        #cumulcounts <- dcounts[, lapply(.SD, cumsum), .SDcols = colnames(dcounts[, !"VpJ"])]
-#    } else {
-#        sNames <- unique(sdata[, colorBy])
-#        if (is.na(match(eval(colorBy), colnames(sdata)))) stop(paste0(colorBy," not found in sData(x)."))
-#        if (groupBy) {
-#            counts <- cts[, paste(colorBy) := lapply(.SD, function(x) sdata[x, colorBy]), .SDcols = "lib"]
-#            dcounts <- data.table::dcast(data = counts, paste("VpJ~",colorBy), value.var = "count", fun.aggregate = sum)
-#            #print(dcounts[,!"VpJ"])
-#            #cumulcounts <- dcounts[, lapply(.SD, cumsum), .SDcols = colnames(dcounts[,!"VpJ"])]
-#        } else {
-#            counts <- assay(x)
-#            dcounts <- dcast(data = counts, VpJ~lib, value.var = "count", fun.aggregate = sum)
-#            #cumulcounts <- dcounts[, lapply(.SD, cumsum), .SDcols = colnames(dcounts[,!"VpJ"])]
-#        }
-#    }
-#    #print(nbcols(counts[, lapply(.SD, function(x){x==0}), .SDcols =  colnames(dcounts[,!"VpJ"])]))
-#    # VpJlist <- as.vector(counts[, VpJ])
-#    #print(dcounts)
-#    rare <- rarefaction(dcounts[, !"VpJ"], 10)#, step)
-#    nblines <- ncol(rare)
-#    raredt <- data.table::setDT(rare)
-#    #raredt[, size := c(1, step*1:(nrow(raredt)-1))]
-#    rarem <- melt(raredt, measure.vars = colnames(raredt[,!"size"]))
-#    if (!is.null(colorBy) & !groupBy) {
-#        rarem[, paste(colorBy) := lapply(.SD, function(x) sdata[x, colorBy] ), .SDcols = "variable"]
-#        p <- ggplot2::ggplot(data = rarem[value!=0], aes_string(x = "size", y = "value", colour = colorBy)) + 
-#                ggplot2::geom_line()
-#        return(p)
-#    }
-#    ggplot(data = rarem[value!=0], aes(x = size, y = value, colour = variable)) + geom_line(size = 2)
-#  # tcounts = t(as.matrix(dcounts[,!"VpJ"]))
-#  # #print(head(tcounts))
-#  # raremax <- min(rowSums(tcounts))
-#  # rarecurve(tcounts, step = 10000, sample = raremax,
-#  #            label = FALSE)
-#}
-
-
-#' function plotDistribVpJ
+#' frequency of clonotype by its rank
 #'
 #' function 
 #' @param x an object of class RepSeqExperiment
@@ -587,7 +562,15 @@ plotFrequencySpectrum <- function(x, colorBy = NULL, groupBy = FALSE) {
 #' @param aggreg aggregation of counts by sum or by mean
 #' @return a plot
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' get the names of columns
+#' names(sData(RepSeqData))
+#' # plot mean distribution of clonotypes by project
+#' plotDistribVpJ(x = RepSeqData, colorBy = "project", aggreg = "mean")
+#' }
 plotDistribVpJ <- function(x, colorBy = NULL, aggreg = c("sum", "mean")){
     group <- NULL
     if (missing(x)) stop("x is missing.")
@@ -618,27 +601,37 @@ plotDistribVpJ <- function(x, colorBy = NULL, aggreg = c("sum", "mean")){
 #'
 #' function plot Venn's diagram up to 5 samples
 #' @param x an object of class RepSeqExperiment
-#' @param level repertoire level
-#' @param colorBy color by group of samples. If not NULL 
+#' @param level repertoire level. Available options: V, J, VP, VpJ, CDR3aa.
+#' @param libs a vector of character indicating the list of samples.
 #' @return a Venn's diagram
 #' @export
-# @example
-plotVenn <- function(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"), colorBy = NULL) {
-    group <- NULL
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' names(sData(RepSeqData))
+#' plot Venn diagram of 
+#' plotVenn(x = RepSeqData, level = "V", colorBy = "project")    
+#' }
+plotVenn <- function(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"), libs = NULL) {
+    ..libs <- NULL
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
     levelChoice <- match.arg(level)
     sdata <- sData(x)
-    counts <- data.table::copy(assay(x))
-    if (length(colorBy) > 1) {
-        sNames <- colorBy
-        dcounts <- data.table::dcast(data = counts, paste(levelChoice,"~lib"), value.var = "count", fun.aggregate = sum)
-    } else {
-        sNames <- unique(sdata[, colorBy])
-        counts[, group := lapply(.SD, function(x) sdata[x, colorBy]), .SDcols = "lib"]
-        dcounts <- data.table::dcast(data = counts, paste(levelChoice,"~group"), value.var = "count", fun.aggregate = sum)
+    if (is.null(libs)) libs <- rownames(sdata)[1:3]
+    if (length(libs) > 5) {
+        message("There are more than 5 libs, only first five libs will be used.")
+        libs <- libs[1:5]
     }
-    a <- limma::vennCounts(dcounts[ , ..sNames])
+    if (length(libs) == 1) stop("At least 2 libs must be provided.")
+    #sNames <- as.character(unique(sdata[, colorBy]))
+    #counts <- counts[, group := lapply(.SD, function(x) sdata[x, colorBy]), .SDcols = "lib"]
+    counts <- data.table::copy(assay(x))[lib %in% libs]
+    dcounts <- data.table::dcast(data = counts, paste(levelChoice, "~lib"), value.var = "count", fun.aggregate = sum)
+    #if (length(sNames) > 5) stop("There are more than five sets. Venn diagram can plot up to five sets only.")
+    dcounts[, c(libs) := lapply(.SD, function(x) as.integer(x>0)), .SDcols = libs]
+    a <- limma::vennCounts(dcounts[ , ..libs])
     limma::vennDiagram(a, circle.col = c("red", "blue", "green3", "purple", "yellow"))
 }
 
@@ -650,7 +643,14 @@ plotVenn <- function(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"), colorBy = NU
 #' @param type count or usage
 #' @return a heatmap 
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' names(sData(RepSeqData))
+#' plot a heatmap of count/usage of repertoire level sorted by the muScore
+#' plotmuScore(x = RepSeqData, level = "V", type = "count")    
+#' }
 plotmuScore <- function(x, level=c("V", "J", "VJ"), type=c("count", "usage")) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
@@ -667,12 +667,32 @@ plotmuScore <- function(x, level=c("V", "J", "VJ"), type=c("count", "usage")) {
     #rownames(coldata) <- gsub("\\-", ".", rownames(sdata))
     sNames <- rownames(sdata)
     groups <- sdata[, unlist(lapply(sdata, is.factor)), drop = F]
-    data2plot <- data.frame(muScore(x, levelChoice, typeChoice), row.names=1)
+    data2plot <- data.frame(muScore(x, levelChoice, typeChoice), row.names=1, check.names=FALSE)
     p <- pheatmap::pheatmap(as.matrix(data2plot[, rownames(groups), drop=FALSE]), 
             main = paste(typeChoice, "of", levelChoice, "in samples"), cluster_rows = FALSE, cluster_cols = TRUE,
             treeheight_row = 0L, annotation_col=groups, show_colnames=T, labels_col = sNames,
             show_rownames=TRUE, clustering_method = "ward.D2", silent = TRUE, color = grDevices::colorRampPalette(c("lightgrey", "red"))(100))
     return(p)
+}
+
+# ggName -> changes a string so it is enclosed in back-ticks.
+#   This can be used to make column names that have spaces (blanks)
+#   or non-letter characters acceptable to ggplot2.
+#   This version of the function is vectorized with sapply.
+ggname <- function(x) {
+    if (class(x) != "character") {
+        return(x)
+    }
+    y <- sapply(x, function(s) {
+        if (!grepl("^`", s)) {
+            s <- paste("`", s, sep="", collapse="")
+        }
+        if (!grepl("`$", s)) {
+            s <- paste(s, "`", sep="", collapse="")
+        }
+    }
+    )
+    y 
 }
 
 #' sample against sample plot
@@ -684,21 +704,39 @@ plotmuScore <- function(x, level=c("V", "J", "VJ"), type=c("count", "usage")) {
 #' @param scale normal or log10 scale of axes
 #' @return a dot plot
 #' @export
-# @example
+#' @examples
+#' \dontrun{
+#' # The package RepSeqData contains example datasets 
+#' library(RepSeqData)
+#' rownames(sData(RepSeqData))
+#' plot correlation of counts between 2 samples 
+#' plot2v2count(x = RepSeqData, level = "V", libs = c("S01", "S02"), scale = "log")    
+#' }
 plot2v2count <- function(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"), libs = NULL, scale = c("counts", "log")) {
     if (missing(x)) stop("x is missing.")
     if (!is.RepSeqExperiment(x)) stop("an object of class RepSeqExperiment is expected.")
+    if (length(libs) != 2) stop("Two libraries are required.") 
     levelChoice <- match.arg(level)
     scaleChoice <- match.arg(scale)
     cols <- c("lib", levelChoice, "count")
     cts <- data.table::copy(assay(x))
-    counts <- cts[lib ==libs[1] | lib == libs[2], ..cols]
+    counts <- cts[lib %in% libs, ..cols]
     data2plot <- data.table::dcast(counts, paste(levelChoice, "~lib"), value.var="count", fun.aggregate = sum)
-    p <- ggplot2::ggplot(data2plot, ggplot2::aes_string(libs[1], libs[2])) +
+    libs <- sapply(libs, function(s) {
+                            if (!grepl("^`", s)) {
+                                s <- paste("`", s, sep="", collapse="")
+                            }
+                            if (!grepl("`$", s)) {
+                                s <- paste(s, "`", sep="", collapse="")
+                            }
+                         }
+            )
+    p <- ggplot2::ggplot(data2plot, ggplot2::aes_string(x = libs[1], y = libs[2])) +
         ggplot2::geom_count(ggplot2::aes(alpha = ..n..), size = 2) + 
         ggplot2::scale_alpha(range = c(0.25, 1)) +
         ggplot2::labs(title = paste("counts comparison per ", levelChoice)) +
-        ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5))
+        ggplot2::theme(plot.title = ggplot2::element_text(face = "bold", hjust = 0.5),
+                       legend.position = "none")
     p2 <- p + ggplot2::scale_x_log10() + 
                 ggplot2::scale_y_log10() + 
                 ggplot2::annotation_logticks()

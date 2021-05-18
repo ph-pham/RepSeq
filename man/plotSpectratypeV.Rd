@@ -26,3 +26,12 @@ a wrapped of barplots
 \description{
 function produces barplot according to the CDR3 length for each V gene.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+snames <- rownames(sData(RepSeqData))
+# plot Spectratype of the first sample. One histogram per V gene.
+plotSpectratypeV(x = RepSeqData, sampleName = snames[1], scale = "counts")
+}
+}

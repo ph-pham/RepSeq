@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFunctions.R
 \name{plotDistribVpJ}
 \alias{plotDistribVpJ}
-\title{function plotDistribVpJ}
+\title{frequency of clonotype by its rank}
 \usage{
 plotDistribVpJ(x, colorBy = NULL, aggreg = c("sum", "mean"))
 }
@@ -18,4 +18,14 @@ a plot
 }
 \description{
 function
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+get the names of columns
+names(sData(RepSeqData))
+# plot mean distribution of clonotypes by project
+plotDistribVpJ(x = RepSeqData, colorBy = "project", aggreg = "mean")
+}
 }

@@ -19,3 +19,16 @@ an object of class [\code{\linkS4class{RepSeqExperiment}}]
 \description{
 function returns an RepSeqExperiment object containing shared clonotyes which expressed in at least two samples
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeq)
+library(RepSeqData)
+rownames(sData(RepSeqData))
+# get overlap clonotypes between the sample S01 and the sample S02 
+overlapClones <- getOverlaps(RepSeqData, 
+                           level = "VpJ", 
+                           libnames=("S01", "S02")) 
+overlapClones
+}
+}

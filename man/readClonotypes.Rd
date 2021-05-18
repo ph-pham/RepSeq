@@ -5,8 +5,8 @@
 \title{read clonotype table}
 \usage{
 readClonotypes(
-  x,
-  aligner = c("ClonotypeR", "rTCR", "MiXCR"),
+  path,
+  aligner = c("MiXCR", "Adaptive", "rTCR", "ClonotypeR"),
   chain = c("A", "B"),
   keep.ambiguous = FALSE,
   keep.unproductive = FALSE,
@@ -15,9 +15,9 @@ readClonotypes(
 )
 }
 \arguments{
-\item{x}{a path to a clonotype file, for the moment, only TSV from ClonotypeR is supported.}
+\item{path}{a path to a clonotype file, for the moment, only TSV from ClonotypeR is supported.}
 
-\item{aligner}{choice between type of input file provided by "ClonotypeR", "MiXCR", "rTCR". Default is "ClonotypeR".}
+\item{aligner}{choice between type of input file provided by "Adaptive", "ClonotypeR", "MiXCR", "rTCR". Default is "MiXCR".}
 
 \item{chain}{a character \code{A} or \code{B} indicating the chain to be imported. Default is \code{A}.}
 
@@ -34,6 +34,25 @@ a filtered clonotype table.
 }
 \description{
 function readColontypes is a wrapper of parseClonotypes & filterClonotypes
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+l <- list.files(system.file(file.path('extdata/mixcr'), 
+                         package = 'RepSeqData'), 
+                         full.names = TRUE)
+l
+# first element of the vector
+path <- l[1]
+dataset <- readClonotypes(path = path, 
+                   aligner = "MiXCR", 
+                   chain = "B", 
+                   keep.ambiguous=FALSE, 
+                   keep.unproductive=FALSE, 
+                   aa.th=8, 
+                   outFiltered=F)
+dataset
+}
 }
 \seealso{
 \code{\link{parseClonotypeR}}, \code{\link{filterClonotypes}}

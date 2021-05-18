@@ -19,3 +19,16 @@ subset of x that match the conditions.
 \description{
 this function allows to filter data according to the percentage of presence across samples.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeq)
+library(RepSeqData)
+sData(RepSeqData)
+# get overlap clonotypes between the sample S01 and the sample S02
+filterdata <- getOverlaps(RepSeqData, 
+                       freq = 0.2, 
+                       group = "quantity")  
+filterdata
+}
+}

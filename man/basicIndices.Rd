@@ -17,3 +17,11 @@ a data frame of Chao
 \description{
 function produces several useful diversity indices.
 }
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+divindices <- basicIndices(RepSeqData, level="VpJ")
+divindices
+}
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/basicFunctions.R
 \name{filterassay}
 \alias{filterassay}
-\title{filter clonotypes based on assay}
+\title{filter clonotypes based on counts}
 \usage{
 filterassay(x, n = 1)
 }
@@ -15,5 +15,14 @@ filterassay(x, n = 1)
 an object of class \code{RepSeqExperiment}
 }
 \description{
-function filters out every clonotypes having low assay across all samples.
+function filters out every clonotypes having low counts across all samples.
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+# filter clonotypes having less than 3 counts accros all samples
+filterdata <- filterassay(RepSeqData, n=3) 
+filterdata
+}
 }

@@ -23,3 +23,11 @@ a data.table ordered by the multivariate decreasing scores. The last column cont
 \description{
 function computes multivariate score for each feature at level of the repertoire \code{VJ, V, J}. The level VpJ is not supported for the moment.
 }
+\examples{
+\dontrun{
+## The package RepSeqData contains example datasets 
+library(RepSeqData)
+res <- muScore(x = RepSeqData, level = "V", type = "count")
+res
+}
+}

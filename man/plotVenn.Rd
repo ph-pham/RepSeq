@@ -4,18 +4,27 @@
 \alias{plotVenn}
 \title{plot Venn's diagram}
 \usage{
-plotVenn(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"), colorBy = NULL)
+plotVenn(x, level = c("V", "J", "VJ", "VpJ", "CDR3aa"), libs = NULL)
 }
 \arguments{
 \item{x}{an object of class RepSeqExperiment}
 
-\item{level}{repertoire level}
+\item{level}{repertoire level. Available options: V, J, VP, VpJ, CDR3aa.}
 
-\item{colorBy}{color by group of samples. If not NULL}
+\item{libs}{a vector of character indicating the list of samples.}
 }
 \value{
 a Venn's diagram
 }
 \description{
 function plot Venn's diagram up to 5 samples
+}
+\examples{
+\dontrun{
+# The package RepSeqData contains example datasets 
+library(RepSeqData)
+names(sData(RepSeqData))
+plot Venn diagram of 
+plotVenn(x = RepSeqData, level = "V", colorBy = "project")    
+}
 }

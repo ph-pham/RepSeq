@@ -24,6 +24,7 @@
 \alias{names,RepSeqExperiment-method}
 \alias{names}
 \alias{names<-,RepSeqExperiment-method}
+\alias{[,RepSeqExperiment,ANY,ANY,ANY-method}
 \alias{[,RepSeqExperiment-method}
 \alias{is.RepSeqExperiment}
 \title{Class RepSeqExperiment}
@@ -66,7 +67,7 @@ History(object) <- value
 
 \S4method{names}{RepSeqExperiment}(x) <- value
 
-\S4method{[}{RepSeqExperiment}(x, i, j, drop)
+\S4method{[}{RepSeqExperiment,ANY,ANY,ANY}(x, i, j, drop)
 
 is.RepSeqExperiment(x)
 }
@@ -87,7 +88,7 @@ is.RepSeqExperiment(x)
 an object of class [\code{\linkS4class{RepSeqExperiment}}]
 }
 \description{
-An S4 class to represent a HTS RepSeq set.
+An S4 class to represent a Hight Throuput Sequencing Immune Repertoire Experiment.
 
 \code{[} Extract parts of RepSeqExperiment.
 }
@@ -104,5 +105,5 @@ An S4 class to represent a HTS RepSeq set.
 }}
 
 \author{
-H. P. Pham (mailto: hp.pham(a)iltoopharma.fr, twitter: #kiniou.est.mon.ami, #chokomlabreizh)
+H. P. Pham (mailto: hp.pham(a)pareanbiotech.fr, #chokomlabreizh)
 }
