@@ -457,7 +457,7 @@ readClonotypeSet <- function(fileList, cores = 1L, aligner = c("MiXCR", "Adaptiv
 	 }
 	 if (filterSingleton) {
 	   cat ("Removing singleton clonotypes...")
-	   out <- filterassay(out, n = 1)
+	   out <- filterCount(out, n = 1)
 	 }
      cat("Done.\n")
      return(out)

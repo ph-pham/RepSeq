@@ -2,22 +2,22 @@
 % Please edit documentation in R/basicFunctions.R
 \name{filterFrequency}
 \alias{filterFrequency}
-\title{filter based on expression.}
+\title{filter clonotypes presented in less than a proportion of samples.}
 \usage{
 filterFrequency(x, freq = 0.2, group = NULL)
 }
 \arguments{
-\item{x}{count data set with features in rows and samples in columns.}
+\item{x}{an object of class RepSeqExperiment.}
 
-\item{freq}{a threshold expressed between 0 & 1 below which data will be filtered out.}
+\item{freq}{a number between 0 & 1. A clonotype is retained if it is present in a proportion of samples that excces This is the proportion of samples}
 
-\item{group}{a factor in sampleData, if not null, freq is applied to the group having the smallest number of membres.}
+\item{group}{a factor in sampleData, if null, freq is applied to the group having the smallest number of membres.}
 }
 \value{
-subset of x that match the conditions.
+an object of class RepSeqExperiment satisfying the conditions.
 }
 \description{
-this function allows to filter data according to the percentage of presence across samples.
+A function that returns a function with values for A, p and na.rm bound to the specified values. The function takes a single vector, x, as an argument. When the returned function is evaluated it returns TRUE if the proportion of values in x that are larger than A is at least p.
 }
 \examples{
 \dontrun{
@@ -26,7 +26,7 @@ library(RepSeq)
 library(RepSeqData)
 sData(RepSeqData)
 # get overlap clonotypes between the sample S01 and the sample S02
-filterdata <- getOverlaps(RepSeqData, 
+filterdata <- filterFrequency(RepSeqData, 
                        freq = 0.2, 
                        group = "quantity")  
 filterdata
